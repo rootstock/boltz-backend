@@ -2,8 +2,10 @@ import AsyncLock from 'async-lock';
 import zmq, { Socket } from 'zeromq';
 import { EventEmitter } from 'events';
 import { Transaction, crypto } from 'bitcoinjs-lib';
+import { Transaction as LiquidTransaction } from 'liquidjs-lib';
 import Errors from './Errors';
 import Logger from '../Logger';
+import { CurrencyType } from '../consts/Enums';
 import { formatError, getHexString, reverseBuffer } from '../Utils';
 import { Block, BlockchainInfo, RawTransaction, BlockVerbose } from '../consts/Types';
 
@@ -22,8 +24,8 @@ interface ZmqClient {
   on(event: 'block', listener: (height: number) => void): this;
   emit(event: 'block', height: number): boolean;
 
-  on(event: 'transaction', listener: (transaction: Transaction, confirmed: boolean) => void): this;
-  emit(event: 'transaction', transaction: Transaction, confirmed: boolean): boolean;
+  on(event: 'transaction', listener: (transaction: Transaction | LiquidTransaction, confirmed: boolean) => void): this;
+  emit(event: 'transaction', transaction: Transaction | LiquidTransaction, confirmed: boolean): boolean;
 }
 
 class ZmqClient extends EventEmitter {
@@ -34,6 +36,8 @@ class ZmqClient extends EventEmitter {
   public relevantOutputs = new Set<string>();
 
   public blockHeight = 0;
+
+  private currencyType!: CurrencyType;
 
   private bestBlockHash = '';
 
@@ -61,7 +65,9 @@ class ZmqClient extends EventEmitter {
     super();
   }
 
-  public init = async (notifications: ZmqNotification[]): Promise<void> => {
+  public init = async (currencyType: CurrencyType, notifications: ZmqNotification[]): Promise<void> => {
+    this.currencyType = currencyType;
+
     const activeFilters: any = {};
     const { blocks, bestblockhash } = await this.getBlockchainInfo();
 
@@ -121,7 +127,7 @@ class ZmqClient extends EventEmitter {
   };
 
   public rescanChain = async (startHeight: number): Promise<void> => {
-    const checkTransaction = (transaction: Transaction) => {
+    const checkTransaction = (transaction: Transaction | LiquidTransaction) => {
       if (this.isRelevantTransaction(transaction)) {
         this.emit('transaction', transaction, true);
       }
@@ -135,7 +141,9 @@ class ZmqClient extends EventEmitter {
           const block = await this.getBlockVerbose(hash);
 
           for (const { hex } of block.tx) {
-            const transaction = Transaction.fromHex(hex);
+            const transaction = this.currencyType === CurrencyType.BitcoinLike ?
+              Transaction.fromHex(hex) :
+              LiquidTransaction.fromHex(hex);
 
             checkTransaction(transaction);
           }
@@ -145,7 +153,9 @@ class ZmqClient extends EventEmitter {
 
           for (const tx of block.tx) {
             const rawTransaction = await this.getRawTransactionVerbose(tx);
-            const transaction = Transaction.fromHex(rawTransaction.hex);
+            const transaction = this.currencyType === CurrencyType.BitcoinLike ?
+              Transaction.fromHex(rawTransaction.hex) :
+              LiquidTransaction.fromHex(rawTransaction.hex);
 
             checkTransaction(transaction);
           }
@@ -167,7 +177,9 @@ class ZmqClient extends EventEmitter {
     const socket = await this.createSocket(address, 'rawtx');
 
     socket.on('message', async (_, rawTransaction: Buffer) => {
-      const transaction = Transaction.fromBuffer(rawTransaction);
+      const transaction = this.currencyType === CurrencyType.BitcoinLike ?
+        Transaction.fromBuffer(rawTransaction) :
+        LiquidTransaction.fromBuffer(rawTransaction);
       const id = transaction.getId();
 
       // If the client has already verified that the transaction is relevant for the wallet
@@ -311,7 +323,7 @@ class ZmqClient extends EventEmitter {
     });
   };
 
-  private isRelevantTransaction = (transaction: Transaction) => {
+  private isRelevantTransaction = (transaction: Transaction | LiquidTransaction) => {
     for (const input of transaction.ins) {
       if (this.relevantInputs.has(getHexString(input.hash))) {
         return true;

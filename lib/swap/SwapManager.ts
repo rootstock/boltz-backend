@@ -186,7 +186,7 @@ class SwapManager {
 
     let claimAddress: string | undefined;
 
-    if (receivingCurrency.type === CurrencyType.BitcoinLike) {
+    if (receivingCurrency.type === CurrencyType.BitcoinLike || receivingCurrency.type === CurrencyType.Liquid) {
       const { blocks } = await receivingCurrency.chainClient!.getBlockchainInfo();
       timeoutBlockHeight = blocks + args.timeoutBlockDelta;
 
@@ -489,7 +489,7 @@ class SwapManager {
 
     let refundAddress: string | undefined;
 
-    if (sendingCurrency.type === CurrencyType.BitcoinLike) {
+    if (sendingCurrency.type === CurrencyType.BitcoinLike || sendingCurrency.type === CurrencyType.Liquid) {
       const { keys, index } = sendingCurrency.wallet.getNewKeys();
       const { blocks } = await sendingCurrency.chainClient!.getBlockchainInfo();
       timeoutBlockHeight = blocks + args.onchainTimeoutBlockDelta;

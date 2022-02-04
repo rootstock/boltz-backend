@@ -2,7 +2,9 @@ import AsyncLock from 'async-lock';
 import { EventEmitter } from 'events';
 import { crypto, Transaction } from 'bitcoinjs-lib';
 import { BigNumber, ContractTransaction } from 'ethers';
+import { Transaction as LiquidTransaction } from 'liquidjs-lib';
 import { constructClaimTransaction, constructRefundTransaction, detectSwap, OutputType } from 'boltz-core';
+import { constructClaimTransaction as constructClaimTransactionLiquid, detectSwap as detectSwapLiquid, Networks as NetworksLiquid } from 'boltz-core-liquid';
 import Errors from './Errors';
 import Logger from '../Logger';
 import Swap from '../db/models/Swap';
@@ -31,6 +33,7 @@ import { ChannelCreationStatus, CurrencyType, SwapUpdateEvent } from '../consts/
 import { queryERC20SwapValuesFromLock, queryEtherSwapValuesFromLock } from '../wallet/ethereum/ContractUtils';
 import {
   calculateEthereumTransactionFee,
+  calculateLiquidTransactionFee,
   calculateUtxoTransactionFee,
   decodeInvoice,
   formatError,
@@ -45,8 +48,8 @@ import InvoiceState = Invoice.InvoiceState;
 
 interface SwapNursery {
   // UTXO based chains emit the "Transaction" object and Ethereum based ones just the transaction hash
-  on(event: 'transaction', listener: (swap: Swap | ReverseSwap, transaction: Transaction | string, confirmed: boolean, isReverse: boolean) => void): this;
-  emit(event: 'transaction', swap: Swap | ReverseSwap, transaction: Transaction | string, confirmed: boolean, isReverse: boolean): boolean;
+  on(event: 'transaction', listener: (swap: Swap | ReverseSwap, transaction: Transaction | LiquidTransaction | string, confirmed: boolean, isReverse: boolean) => void): this;
+  emit(event: 'transaction', swap: Swap | ReverseSwap, transaction: Transaction | LiquidTransaction | string, confirmed: boolean, isReverse: boolean): boolean;
 
   on(event: 'expiration', listener: (swap: Swap | ReverseSwap, isReverse: boolean) => void): this;
   emit(event: 'expiration', swap: Swap | ReverseSwap, isReverse: boolean): boolean;
@@ -78,8 +81,8 @@ interface SwapNursery {
   emit(event: 'invoice.expired', reverseSwap: ReverseSwap): boolean;
 
   // UTXO based chains emit the "Transaction" object and Ethereum based ones just the transaction hash
-  on(event: 'coins.sent', listener: (reverseSwap: ReverseSwap, transaction: Transaction | string) => void): this;
-  emit(event: 'coins.sent', reverseSwap: ReverseSwap, transaction: Transaction | string): boolean;
+  on(event: 'coins.sent', listener: (reverseSwap: ReverseSwap, transaction: Transaction | LiquidTransaction | string) => void): this;
+  emit(event: 'coins.sent', reverseSwap: ReverseSwap, transaction: Transaction | LiquidTransaction | string): boolean;
 
   on(event: 'coins.failedToSend', listener: (reverseSwap: ReverseSwap) => void): this;
   emit(event: 'coins.failedToSend', reverseSwap: ReverseSwap): boolean;
@@ -244,8 +247,9 @@ class SwapNursery extends EventEmitter {
 
         const wallet = this.walletManager.wallets.get(chainSymbol)!;
 
-          switch (chainCurrency.type) {
+        switch (chainCurrency.type) {
           case CurrencyType.BitcoinLike:
+          case CurrencyType.Liquid:
             await this.lockupUtxo(
               chainCurrency.chainClient!,
               this.walletManager.wallets.get(chainSymbol)!,
@@ -604,7 +608,7 @@ class SwapNursery extends EventEmitter {
     chainClient: ChainClient,
     wallet: Wallet,
     swap: Swap,
-    transaction: Transaction,
+    transaction: Transaction | LiquidTransaction,
     outgoingChannelId?: string,
   ) => {
     const channelCreation = await this.channelCreationRepository.getChannelCreation({
@@ -620,29 +624,65 @@ class SwapNursery extends EventEmitter {
 
     // Compatibility mode with database schema version 0 in which this column didn't exist
     if (swap.lockupTransactionVout === undefined) {
-      swap.lockupTransactionVout = detectSwap(getHexBuffer(swap.redeemScript!), transaction)!.vout;
+      swap.lockupTransactionVout = chainClient.currencyType === CurrencyType.BitcoinLike ?
+        detectSwap(getHexBuffer(swap.redeemScript!), transaction as Transaction)!.vout :
+        detectSwapLiquid(getHexBuffer(swap.redeemScript!), transaction as LiquidTransaction)!.vout;
     }
 
-    const output = transaction.outs[swap.lockupTransactionVout!];
+    let claimTransaction: Transaction | LiquidTransaction;
+    let claimTransactionFee: number;
 
-    const claimTransaction = await constructClaimTransaction(
-      [
-        {
-          preimage,
-          vout: swap.lockupTransactionVout!,
-          value: output.value,
-          script: output.script,
-          type: this.swapOutputType,
-          txHash: transaction.getHash(),
-          keys: wallet.getKeysByIndex(swap.keyIndex!),
-          redeemScript: getHexBuffer(swap.redeemScript!),
-        }
-      ],
-      wallet.decodeAddress(destinationAddress),
-      await chainClient.estimateFee(),
-      true,
-    );
-    const claimTransactionFee = await calculateUtxoTransactionFee(chainClient, claimTransaction);
+    if (chainClient.currencyType === CurrencyType.BitcoinLike) {
+      const output = (transaction as Transaction).outs[swap.lockupTransactionVout!];
+
+      claimTransaction = constructClaimTransaction(
+        [
+          {
+            preimage,
+            vout: swap.lockupTransactionVout!,
+            value: output.value as number,
+            script: output.script,
+            type: this.swapOutputType,
+            txHash: transaction.getHash(),
+            keys: wallet.getKeysByIndex(swap.keyIndex!),
+            redeemScript: getHexBuffer(swap.redeemScript!),
+          }
+        ],
+        wallet.decodeAddress(destinationAddress),
+        await chainClient.estimateFee(),
+        true,
+      );
+
+      claimTransactionFee = await calculateUtxoTransactionFee(chainClient, claimTransaction);
+    } else {
+      const output = (transaction as LiquidTransaction).outs[swap.lockupTransactionVout!];
+
+      claimTransaction = constructClaimTransactionLiquid(
+        [
+          {
+            preimage,
+            vout: swap.lockupTransactionVout!,
+            value: output.value as Buffer,
+            asset: output.asset!,
+            nonce: output.nonce!,
+            rangeProof: output.rangeProof,
+            surjectionProof: output.surjectionProof,
+            script: output.script,
+            type: this.swapOutputType,
+            txHash: transaction.getHash(),
+            keys: wallet.getKeysByIndex(swap.keyIndex!),
+            redeemScript: getHexBuffer(swap.redeemScript!),
+          }
+        ],
+        wallet.decodeAddress(destinationAddress),
+        await chainClient.estimateFee(),
+        true,
+        // TODO: get network asset hash from wallet
+        NetworksLiquid.liquidRegtest.assetHash,
+      );
+
+      claimTransactionFee = calculateLiquidTransactionFee(claimTransaction);
+    }
 
     await chainClient.sendRawTransaction(claimTransaction.toHex());
 

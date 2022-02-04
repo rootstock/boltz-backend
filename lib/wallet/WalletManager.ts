@@ -11,12 +11,14 @@ import { splitDerivationPath } from '../Utils';
 import ChainClient from '../chain/ChainClient';
 import LndClient from '../lightning/LndClient';
 import { CurrencyType } from '../consts/Enums';
-import KeyRepository from '../db/repositories/KeyRepository';
+import ElementsClient from 'lib/chain/ElementsClient';
 import EthereumManager from './ethereum/EthereumManager';
-import ChainTipRepository from '../db/repositories/ChainTipRepository';
 import { KeyProviderType } from '../db/models/KeyProvider';
+import KeyRepository from '../db/repositories/KeyRepository';
 import LndWalletProvider from './providers/LndWalletProvider';
 import CoreWalletProvider from './providers/CoreWalletProvider';
+import ChainTipRepository from '../db/repositories/ChainTipRepository';
+import ElementsWalletProvider from './providers/ElementsWalletProvider';
 import WalletProviderInterface from './providers/WalletProviderInterface';
 
 type CurrencyLimits = {
@@ -88,7 +90,7 @@ class WalletManager {
     const keyProviderMap = await this.getKeyProviderMap();
 
     for (const currency of this.currencies) {
-      if (currency.type !== CurrencyType.BitcoinLike) {
+      if (currency.type !== CurrencyType.BitcoinLike && currency.type !== CurrencyType.Liquid) {
         continue;
       }
 
@@ -100,7 +102,11 @@ class WalletManager {
 
       // Else the Bitcoin Core wallet is used
       } else {
-        walletProvider = new CoreWalletProvider(this.logger, currency.chainClient!);
+        if (currency.type === CurrencyType.BitcoinLike) {
+          walletProvider = new CoreWalletProvider(this.logger, currency.chainClient!);
+        } else {
+          walletProvider = new ElementsWalletProvider(this.logger, currency.chainClient! as ElementsClient);
+        }
 
         // Sanity check that wallet support is compiled in
         try {
@@ -135,7 +141,7 @@ class WalletManager {
 
       const wallet = new Wallet(
         this.logger,
-        CurrencyType.BitcoinLike,
+        currency.type,
         walletProvider,
       );
 

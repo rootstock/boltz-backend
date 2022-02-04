@@ -9,7 +9,8 @@ import WalletProviderInterface, { SentTransaction, WalletBalance } from './provi
 class Wallet {
   public readonly symbol: string;
 
-  private network?: Network;
+  public network!: Network;
+
   private derivationPath?: string;
   private highestUsedIndex?: number;
   private masterNode?: BIP32Interface;
@@ -80,6 +81,10 @@ class Wallet {
    * @param outputScript the output script to encode
    */
   public encodeAddress = (outputScript: Buffer): string => {
+    if (this.type === CurrencyType.Liquid) {
+      // do some other encoding
+    }
+
     if (this.network === undefined) {
       throw Errors.NOT_SUPPORTED_BY_WALLET(this.symbol, 'encodeAddress');
     }

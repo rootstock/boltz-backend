@@ -89,8 +89,6 @@ class CoreWalletProvider implements WalletProviderInterface {
       transaction: rawTransaction,
     };
   };
-
-  private;
 }
 
 export default CoreWalletProvider;

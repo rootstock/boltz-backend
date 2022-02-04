@@ -93,5 +93,6 @@ export enum BaseFeeType {
 export enum CurrencyType {
   BitcoinLike,
   Ether,
-  ERC20
+  ERC20,
+  Liquid,
 }

@@ -127,7 +127,8 @@ class FeeProvider {
     // TODO: avoid hard coding symbols
     switch (chainCurrency) {
       case 'BTC':
-      case 'LTC': {
+      case 'LTC':
+      case 'L-BTC': {
         const relativeFee = feeMap.get(chainCurrency)!;
 
         this.minerFees.set(chainCurrency, {

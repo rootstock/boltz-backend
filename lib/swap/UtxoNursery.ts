@@ -3,17 +3,20 @@ import AsyncLock from 'async-lock';
 import { EventEmitter } from 'events';
 import { Transaction } from 'bitcoinjs-lib';
 import { detectPreimage, detectSwap } from 'boltz-core';
+import { Transaction as LiquidTransaction, confidential } from 'liquidjs-lib';
+import { detectPreimage as detectPreimageLiquid, detectSwap as detectSwapLiquid } from 'boltz-core-liquid';
 import Errors from './Errors';
 import Logger from '../Logger';
 import Swap from '../db/models/Swap';
 import Wallet from '../wallet/Wallet';
 import ChainClient from '../chain/ChainClient';
 import SwapRepository from '../db/repositories/SwapRepository';
-import { SwapUpdateEvent } from '../consts/Enums';
+import { CurrencyType, SwapUpdateEvent } from '../consts/Enums';
 import ReverseSwap from '../db/models/ReverseSwap';
 import ReverseSwapRepository from '../db/repositories/ReverseSwapRepository';
 import WalletManager, { Currency } from '../wallet/WalletManager';
 import {
+  calculateLiquidTransactionFee,
   calculateUtxoTransactionFee,
   getChainCurrency,
   getHexBuffer,
@@ -31,18 +34,18 @@ interface UtxoNursery {
   on(event: 'swap.lockup.failed', listener: (swap: Swap, reason: string) => void): this;
   emit(event: 'swap.lockup.failed', swap: Swap, reason: string): boolean;
 
-  on(event: 'swap.lockup.zeroconf.rejected', listener: (swap: Swap, transaction: Transaction, reason: string) => void): this;
-  emit(event: 'swap.lockup.zeroconf.rejected', swap: Swap, transaction: Transaction, reason: string): boolean;
+  on(event: 'swap.lockup.zeroconf.rejected', listener: (swap: Swap, transaction: Transaction | LiquidTransaction, reason: string) => void): this;
+  emit(event: 'swap.lockup.zeroconf.rejected', swap: Swap, transaction: Transaction | LiquidTransaction, reason: string): boolean;
 
-  on(event: 'swap.lockup', listener: (swap: Swap, transaction: Transaction, confirmed: boolean) => void): this;
-  emit(event: 'swap.lockup', swap: Swap, transaction: Transaction, confirmed: boolean): boolean;
+  on(event: 'swap.lockup', listener: (swap: Swap, transaction: Transaction | LiquidTransaction, confirmed: boolean) => void): this;
+  emit(event: 'swap.lockup', swap: Swap, transaction: Transaction | LiquidTransaction, confirmed: boolean): boolean;
 
   // Reverse Swap
   on(event: 'reverseSwap.expired', listener: (reverseSwap: ReverseSwap) => void): this;
   emit(event: 'reverseSwap.expired', reverseSwap: ReverseSwap);
 
-  on(event: 'reverseSwap.lockup.confirmed', listener: (reverseSwap: ReverseSwap, transaction: Transaction) => void): this;
-  emit(event: 'reverseSwap.lockup.confirmed', reverseSwap: ReverseSwap, transaction: Transaction): boolean;
+  on(event: 'reverseSwap.lockup.confirmed', listener: (reverseSwap: ReverseSwap, transaction: Transaction | LiquidTransaction) => void): this;
+  emit(event: 'reverseSwap.lockup.confirmed', reverseSwap: ReverseSwap, transaction: Transaction | LiquidTransaction): boolean;
 
   on(event: 'reverseSwap.claimed', listener: (reverseSwap: ReverseSwap, preimage: Buffer) => void): this;
   emit(event: 'reverseSwap.claimed', reverseSwap: ReverseSwap, preimage: Buffer): boolean;
@@ -86,7 +89,7 @@ class UtxoNursery extends EventEmitter {
     });
   };
 
-  private checkSwapOutputs = async (chainClient: ChainClient, wallet: Wallet, transaction: Transaction, confirmed: boolean) => {
+  private checkSwapOutputs = async (chainClient: ChainClient, wallet: Wallet, transaction: Transaction | LiquidTransaction, confirmed: boolean) => {
     await this.lock.acquire(UtxoNursery.swapLockupLock, async () => {
       for (let vout = 0; vout < transaction.outs.length; vout += 1) {
         const output = transaction.outs[vout];
@@ -112,7 +115,7 @@ class UtxoNursery extends EventEmitter {
     });
   };
 
-  private checkReverseSwapClaims = async (chainClient: ChainClient, transaction: Transaction) => {
+  private checkReverseSwapClaims = async (chainClient: ChainClient, transaction: Transaction | LiquidTransaction) => {
     for (let vin = 0; vin < transaction.ins.length; vin += 1) {
       const input = transaction.ins[vin];
 
@@ -134,11 +137,13 @@ class UtxoNursery extends EventEmitter {
       this.logger.verbose(`Found claim transaction of Reverse Swap ${reverseSwap.id}: ${transaction.getId()}`);
 
       chainClient.removeInputFilter(input.hash);
-      this.emit('reverseSwap.claimed', reverseSwap, detectPreimage(vin, transaction));
+      this.emit('reverseSwap.claimed', reverseSwap, chainClient.currencyType === CurrencyType.BitcoinLike ?
+        detectPreimage(vin, transaction as Transaction) : detectPreimageLiquid(vin, transaction as LiquidTransaction),
+      );
     }
   };
 
-  private checkReverseSwapLockupsConfirmed = async (chainClient: ChainClient, wallet: Wallet, transaction: Transaction, confirmed: boolean) => {
+  private checkReverseSwapLockupsConfirmed = async (chainClient: ChainClient, wallet: Wallet, transaction: Transaction | LiquidTransaction, confirmed: boolean) => {
     await this.lock.acquire(UtxoNursery.reverseSwapLockupConfirmationLock, async () => {
       if (!confirmed) {
         return;
@@ -256,7 +261,7 @@ class UtxoNursery extends EventEmitter {
     }
   };
 
-  private reverseSwapLockupConfirmed = async (chainClient: ChainClient, wallet: Wallet, reverseSwap: ReverseSwap, transaction: Transaction) => {
+  private reverseSwapLockupConfirmed = async (chainClient: ChainClient, wallet: Wallet, reverseSwap: ReverseSwap, transaction: Transaction | LiquidTransaction) => {
     this.logger.debug(`Lockup transaction of Reverse Swap ${reverseSwap.id} confirmed: ${transaction.getId()}`);
 
     chainClient.removeOutputFilter(wallet.decodeAddress(reverseSwap.lockupAddress));
@@ -267,15 +272,21 @@ class UtxoNursery extends EventEmitter {
     );
   };
 
-  private checkSwapTransaction = async (swap: Swap, chainClient: ChainClient, transaction: Transaction, confirmed: boolean) => {
+  private checkSwapTransaction = async (swap: Swap, chainClient: ChainClient, transaction: Transaction | LiquidTransaction, confirmed: boolean) => {
     this.logger.verbose(`Found ${confirmed ? '' : 'un'}confirmed lockup transaction for Swap ${swap.id}: ${transaction.getId()}`);
 
-    const swapOutput = detectSwap(getHexBuffer(swap.redeemScript!), transaction)!;
+    const swapOutput = chainClient.currencyType === CurrencyType.BitcoinLike ?
+      detectSwap(getHexBuffer(swap.redeemScript!), transaction as Transaction)! :
+      detectSwapLiquid(getHexBuffer(swap.redeemScript!), transaction as LiquidTransaction)!;
+
+    const outputValue = chainClient.currencyType === CurrencyType.BitcoinLike ?
+      swapOutput.value as number :
+      confidential.confidentialValueToSatoshi(swapOutput.value as Buffer);
 
     const updatedSwap = await this.swapRepository.setLockupTransaction(
       swap,
       transaction.getId(),
-      swapOutput.value,
+      outputValue,
       confirmed,
       swapOutput.vout,
     );
@@ -283,7 +294,7 @@ class UtxoNursery extends EventEmitter {
     if (updatedSwap.expectedAmount) {
       if (updatedSwap.expectedAmount > swapOutput.value) {
         chainClient.removeOutputFilter(swapOutput.script);
-        this.emit('swap.lockup.failed', updatedSwap, Errors.INSUFFICIENT_AMOUNT(swapOutput.value, updatedSwap.expectedAmount).message);
+        this.emit('swap.lockup.failed', updatedSwap, Errors.INSUFFICIENT_AMOUNT(outputValue, updatedSwap.expectedAmount).message);
 
         return;
       }
@@ -306,7 +317,11 @@ class UtxoNursery extends EventEmitter {
       // Check if the transaction has a fee high enough to be confirmed in a timely manner
       const feeEstimation = await chainClient.estimateFee();
 
-      const absoluteTransactionFee = await calculateUtxoTransactionFee(chainClient, transaction);
+      const absoluteTransactionFee = chainClient.currencyType === CurrencyType.BitcoinLike ?
+        await calculateUtxoTransactionFee(chainClient, transaction as Transaction) :
+        // In Liquid, the fee is explicit in the output that does not have a script
+        calculateLiquidTransactionFee(transaction as LiquidTransaction);
+
       const transactionFeePerVbyte = absoluteTransactionFee / transaction.virtualSize();
 
       // If the transaction fee is less than 80% of the estimation, Boltz will wait for a confirmation
@@ -332,7 +347,7 @@ class UtxoNursery extends EventEmitter {
   /**
    * Detects whether the transaction signals RBF explicitly or inherently
    */
-  private transactionSignalsRbf = async (chainClient: ChainClient, transaction: Transaction) => {
+  private transactionSignalsRbf = async (chainClient: ChainClient, transaction: Transaction | LiquidTransaction) => {
     // Check for explicit signalling
     if (transactionSignalsRbfExplicitly(transaction)) {
       return true;

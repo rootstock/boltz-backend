@@ -5,6 +5,7 @@ import { Transaction, crypto } from 'bitcoinjs-lib';
 import bolt11, { RoutingInfo } from '@boltz/bolt11';
 import { BigNumber, ContractTransaction } from 'ethers';
 import { Errors, OutputType, Scripts } from 'boltz-core';
+import { Transaction as LiquidTransaction, confidential } from 'liquidjs-lib';
 import commitHash from './Version';
 import packageJson from '../package.json';
 import { OrderSide } from './consts/Enums';
@@ -344,7 +345,7 @@ export const transactionHashToId = (transactionHash: Buffer): string => {
  *
  * @param transaction the transactions to scan
  */
-export const transactionSignalsRbfExplicitly = (transaction: Transaction): boolean => {
+export const transactionSignalsRbfExplicitly = (transaction: Transaction | LiquidTransaction): boolean => {
   for (const input of transaction.ins) {
     if (input.sequence < 0xffffffff - 1) {
       return true;
@@ -445,6 +446,9 @@ export const calculateUtxoTransactionFee = async (chainClient: ChainClient, tran
   return fee;
 };
 
+export const calculateLiquidTransactionFee = (transaction: LiquidTransaction) => {
+  return confidential.confidentialValueToSatoshi((transaction as LiquidTransaction).outs.find((out) => out.script.length === 0)!.value);
+};
 
 /**
  * Calculates the transaction fee of an Ethereum contract interaction and rounds it to 10 ** -8 decimals

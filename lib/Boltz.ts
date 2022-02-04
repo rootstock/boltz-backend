@@ -2,6 +2,7 @@ import fs from 'fs';
 import { Arguments } from 'yargs';
 import { Networks } from 'boltz-core';
 import { generateMnemonic } from 'bip39';
+import { Networks as LiquidNetworks } from 'boltz-core-liquid';
 import Api from './api/Api';
 import Logger from './Logger';
 import Report from './data/Report';
@@ -21,6 +22,7 @@ import ChainTipRepository from './db/repositories/ChainTipRepository';
 import EthereumManager from './wallet/ethereum/EthereumManager';
 import WalletManager, { Currency } from './wallet/WalletManager';
 import NotificationProvider from './notifications/NotificationProvider';
+import ElementsClient from './chain/ElementsClient';
 
 class Boltz {
   private readonly logger: Logger;
@@ -113,7 +115,7 @@ class Boltz {
     } catch (error) {
       this.logger.error(`Could not start Boltz: ${formatError(error)}`);
       // eslint-disable-next-line no-process-exit
-      process.exit(1);
+      // process.exit(1);
     }
   }
 
@@ -183,7 +185,7 @@ class Boltz {
       this.logger.error(`Could not initialize Boltz: ${formatError(error)}`);
       console.log(error);
       // eslint-disable-next-line no-process-exit
-      process.exit(1);
+      // process.exit(1);
     }
   };
 
@@ -268,6 +270,18 @@ class Boltz {
         provider: this.ethereumManager?.provider,
       });
     });
+
+    if (this.config.liquid) {
+      result.set(this.config.liquid!.symbol, {
+        type: CurrencyType.Liquid,
+        symbol: this.config.liquid!.symbol,
+        network: LiquidNetworks[this.config.liquid!.network],
+        chainClient: new ElementsClient(this.logger, this.config.liquid!.chain, this.config.liquid!.symbol),
+        limits: {
+          ...this.config.liquid,
+        },
+      });
+    }
 
     return result;
   };

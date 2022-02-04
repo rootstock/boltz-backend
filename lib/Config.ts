@@ -113,6 +113,19 @@ type NotificationConfig = {
   otpsecretpath: string;
 };
 
+type LiquidConfig = {
+  symbol: string;
+  network: Network;
+
+  maxSwapAmount: number;
+  minSwapAmount: number;
+
+  minWalletBalance: number;
+  maxWalletBalance?: number;
+
+  chain: ChainConfig;
+};
+
 type ConfigType = {
   datadir: string;
 
@@ -136,6 +149,8 @@ type ConfigType = {
 
   pairs: PairConfig[];
   currencies: CurrencyConfig[];
+
+  liquid?: LiquidConfig;
 
   ethereum: EthereumConfig;
 };
@@ -294,6 +309,8 @@ class Config {
           },
         },
       ],
+
+      liquid: undefined,
 
       ethereum: {
         providerEndpoint: '',
