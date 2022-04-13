@@ -1,13 +1,13 @@
 import AsyncLock from 'async-lock';
 import zmq, { Socket } from 'zeromq';
 import { EventEmitter } from 'events';
-import { Transaction, crypto } from 'bitcoinjs-lib';
+import { crypto, Transaction } from 'bitcoinjs-lib';
 import { Transaction as LiquidTransaction } from 'liquidjs-lib';
 import Errors from './Errors';
 import Logger from '../Logger';
 import { CurrencyType } from '../consts/Enums';
 import { formatError, getHexString, reverseBuffer } from '../Utils';
-import { Block, BlockchainInfo, RawTransaction, BlockVerbose } from '../consts/Types';
+import { Block, BlockchainInfo, BlockVerbose, RawTransaction } from '../consts/Types';
 
 type ZmqNotification = {
   type: string;
@@ -41,6 +41,7 @@ class ZmqClient extends EventEmitter {
 
   private bestBlockHash = '';
 
+  private rawBlockAddress?: string;
   private hashBlockAddress?: string;
 
   private sockets: Socket[] = [];
@@ -83,7 +84,7 @@ class ZmqClient extends EventEmitter {
 
         case filters.rawBlock:
           activeFilters.rawBlock = true;
-          await this.initRawBlock(notification.address);
+          this.rawBlockAddress = notification.address;
           break;
 
         case filters.hashBlock:
@@ -96,6 +97,8 @@ class ZmqClient extends EventEmitter {
     if (!activeFilters.rawtx) {
       throw Errors.NO_RAWTX();
     }
+
+    await this.initRawBlock();
 
     const logCouldNotSubscribe = (filter: string) => {
       this.logger.warn(`Could not find ${this.symbol} chain ZMQ filter: ${filter}`);
@@ -206,11 +209,16 @@ class ZmqClient extends EventEmitter {
     });
   };
 
-  private initRawBlock = async (address: string) => {
-    const socket = await this.createSocket(address, 'rawblock');
+  private initRawBlock = async () => {
+    // Elements raw block subscriptions are not supported
+    if (this.currencyType === CurrencyType.Liquid || this.rawBlockAddress === undefined) {
+      return this.initHashBlock();
+    }
+
+    const socket = await this.createSocket(this.rawBlockAddress!, 'rawblock');
 
     socket.on('disconnect', () => {
-      socket.disconnect(address);
+      socket.disconnect(this.rawBlockAddress!);
 
       this.logger.warn(`${this.symbol} ${filters.rawBlock} ZMQ filter disconnected. Falling back to ${filters.hashBlock}`);
       this.initHashBlock();

@@ -1,8 +1,8 @@
+import Logger from '../Logger';
 import ChainClient from './ChainClient';
+import { ChainConfig } from '../Config';
 import { CurrencyType } from '../consts/Enums';
 import { LiquidBalances } from '../consts/LiquidTypes';
-import Logger from '../Logger';
-import { ChainConfig } from '../Config';
 
 class ElementsClient extends ChainClient {
   constructor(
