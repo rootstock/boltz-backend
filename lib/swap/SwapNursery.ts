@@ -2,9 +2,9 @@ import AsyncLock from 'async-lock';
 import { EventEmitter } from 'events';
 import { crypto, Transaction } from 'bitcoinjs-lib';
 import { BigNumber, ContractTransaction } from 'ethers';
-import { Transaction as LiquidTransaction } from 'liquidjs-lib';
+import { Transaction as LiquidTransaction, Network as LiquidNetwork } from 'liquidjs-lib';
 import { constructClaimTransaction, constructRefundTransaction, detectSwap, OutputType } from 'boltz-core';
-import { constructClaimTransaction as constructClaimTransactionLiquid, detectSwap as detectSwapLiquid, Networks as NetworksLiquid } from 'boltz-core-liquid';
+import { constructClaimTransaction as constructClaimTransactionLiquid, detectSwap as detectSwapLiquid } from 'boltz-core-liquid';
 import Errors from './Errors';
 import Logger from '../Logger';
 import Swap from '../db/models/Swap';
@@ -677,8 +677,7 @@ class SwapNursery extends EventEmitter {
         wallet.decodeAddress(destinationAddress),
         await chainClient.estimateFee(),
         true,
-        // TODO: get network asset hash from wallet
-        NetworksLiquid.liquidRegtest.assetHash,
+        (wallet.network as LiquidNetwork).assetHash,
       );
 
       claimTransactionFee = calculateLiquidTransactionFee(claimTransaction);

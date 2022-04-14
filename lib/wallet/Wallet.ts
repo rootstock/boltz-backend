@@ -1,5 +1,6 @@
 import { BIP32Interface } from 'bip32';
-import { Network, address } from 'bitcoinjs-lib';
+import { address, Network } from 'bitcoinjs-lib';
+import { address as liquidAddress, Network as LiquidNetwork } from 'liquidjs-lib';
 import Errors from './Errors';
 import Logger from '../Logger';
 import { CurrencyType } from '../consts/Enums';
@@ -81,15 +82,20 @@ class Wallet {
    * @param outputScript the output script to encode
    */
   public encodeAddress = (outputScript: Buffer): string => {
-    if (this.type === CurrencyType.Liquid) {
-      // do some other encoding
-    }
-
     if (this.network === undefined) {
       throw Errors.NOT_SUPPORTED_BY_WALLET(this.symbol, 'encodeAddress');
     }
 
     try {
+      if (this.type === CurrencyType.Liquid) {
+        // Fee output of Liquid
+        if (outputScript.length == 0) {
+          return '';
+        }
+
+        return liquidAddress.fromOutputScript(outputScript, this.network as LiquidNetwork);
+      }
+
       return address.fromOutputScript(
         outputScript,
         this.network,
@@ -111,10 +117,9 @@ class Wallet {
       throw Errors.NOT_SUPPORTED_BY_WALLET(this.symbol, 'decodeAddress');
     }
 
-    return address.toOutputScript(
-      toDecode,
-      this.network,
-    );
+    return this.type === CurrencyType.Liquid ?
+      liquidAddress.toOutputScript(toDecode, this.network as LiquidNetwork) :
+      address.toOutputScript(toDecode, this.network);
   };
 
   public getAddress = (): Promise<string> => {
