@@ -45,7 +45,7 @@ Then can start and stop regtest deployment as follows
 ```
 npm run docker:start
 
-docker run docker:rskj:fundAcc
+npm run docker:rskj:fundAcc
 #stop
 npm run docker:stop
 ```
