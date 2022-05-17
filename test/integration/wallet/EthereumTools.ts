@@ -2,7 +2,7 @@ import { ERC20 } from 'boltz-core/typechain/ERC20';
 import { BigNumber, providers, Signer, Wallet } from 'ethers';
 
 export const getSigner = (): { provider: providers.WebSocketProvider, signer: Signer, etherBase: Signer } => {
-  const provider = new providers.WebSocketProvider('http://127.0.0.1:8546');
+  const provider = new providers.WebSocketProvider('http://127.0.0.1:4445');
 
   return {
     provider,

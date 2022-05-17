@@ -9,7 +9,7 @@
     "precompile": "node parseGitCommit.js",
     "compile": "tsc && cross-os postcompile",
     "compile:watch": "tsc -w",
-    "start": "node bin/boltzd",
+    "start": "node bin/boltzd --configpath './rskBoltzConfig.toml'",
     "dev": "npm run compile && npm run start",
     "lint": "eslint --max-warnings 0 --ext .ts .",
     "docker:regtest": "./docker/regtest/startRegtest.sh",
