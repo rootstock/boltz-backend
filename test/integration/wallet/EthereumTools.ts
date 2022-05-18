@@ -1,8 +1,8 @@
 import { ERC20 } from 'boltz-core/typechain/ERC20';
 import { BigNumber, providers, Signer, Wallet } from 'ethers';
 
-export const getSigner = (): { provider: providers.WebSocketProvider, signer: Signer, etherBase: Signer } => {
-  const provider = new providers.WebSocketProvider('http://127.0.0.1:4445');
+export const getSigner = (): { provider: providers.JsonRpcProvider, signer: Signer, etherBase: Signer } => {
+  const provider = new providers.JsonRpcProvider('http://127.0.0.1:4444');
 
   return {
     provider,
@@ -25,13 +25,14 @@ export const fundSignerWallet = async (signer: Signer, etherBase: Signer, token?
     const tokenFundingTransaction = await token.connect(etherBase).transfer(
       signerAddress,
       BigNumber.from(10).pow(18),
+      //{gasPrice: BigNumber.from(1) }
     );
 
     await tokenFundingTransaction.wait(1);
   }
 };
 
-export const waitForTransactionHash = async (provider: providers.WebSocketProvider,  transactionHash: string): Promise<void> => {
+export const waitForTransactionHash = async (provider: providers.JsonRpcProvider,  transactionHash: string): Promise<void> => {
   const transaction = await provider.getTransaction(transactionHash);
   await transaction.wait(1);
 };

@@ -44,15 +44,13 @@ class EtherWalletProvider implements WalletProviderInterface {
   public sweepWallet = async (address: string): Promise<SentTransaction> => {
     const balance = await this.signer.getBalance();
 
-    const { type, maxPriorityFeePerGas, maxFeePerGas } = await getGasPrices(this.signer.provider!);
-    const gasCost = this.ethTransferGas.mul(await maxFeePerGas!);
+    const { gasPrice } = await getGasPrices(this.signer.provider!);
+    const gasCost = this.ethTransferGas.mul(await gasPrice!);
 
     const value = balance.sub(gasCost);
 
     const transaction = await this.signer.sendTransaction({
-      type,
-      maxFeePerGas,
-      maxPriorityFeePerGas,
+      gasPrice,
       value,
       to: address,
       gasLimit: this.ethTransferGas,

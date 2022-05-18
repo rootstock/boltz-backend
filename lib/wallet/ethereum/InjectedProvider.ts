@@ -10,6 +10,8 @@ enum EthProviderService {
   Node = 'Node',
   Infura = 'Infura',
   Alchemy = 'Alchemy',
+  //Websocket = 'WebSocket',
+  Http = 'Http', //switching to http for initial RSK port
 }
 
 /**
@@ -28,10 +30,10 @@ class InjectedProvider implements providers.Provider {
 
   constructor(private logger: Logger, config: EthereumConfig) {
     if (config.providerEndpoint) {
-      this.providers.set(EthProviderService.Node, new providers.JsonRpcProvider(config.providerEndpoint));
-      this.logAddedProvider(EthProviderService.Node, { endpoint: config.providerEndpoint });
+      this.providers.set(EthProviderService.Http, new providers.JsonRpcProvider(config.providerEndpoint));
+      this.logAddedProvider(EthProviderService.Http, { endpoint: config.providerEndpoint });
     } else {
-      this.logDisabledProvider(EthProviderService.Node, 'no endpoint was specified');
+      this.logDisabledProvider(EthProviderService.Http, 'no endpoint was specified');
     }
 
     const addEthProvider = (name: EthProviderService, providerConfig: EthProviderServiceConfig) => {
@@ -46,6 +48,7 @@ class InjectedProvider implements providers.Provider {
       }
 
       switch (name) {
+	/*
         case EthProviderService.Infura:
           this.providers.set(name, new providers.InfuraProvider(
             providerConfig.network,
@@ -59,7 +62,7 @@ class InjectedProvider implements providers.Provider {
             providerConfig.apiKey,
           ));
           break;
-
+         */
         default:
           this.logDisabledProvider(name, 'provider not supported');
           return;
@@ -384,3 +387,4 @@ class InjectedProvider implements providers.Provider {
 }
 
 export default InjectedProvider;
+
