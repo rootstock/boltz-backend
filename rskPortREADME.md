@@ -45,17 +45,10 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 source ~/.bashrc
 
 nvm --version
-<<<<<<< HEAD
 nvm install 14 # node 16 had zeromq failures for BTC and LND zmq wallet integration tests
 ```
 
 ## Install project and start in regtest mode
-=======
-nvm install 16 #or latest lts
-```
-
-## Install and play in regtest mode
->>>>>>> 51cef9a (initial changes for rsk)
 
 Move into project directory and install dependencies
 ```
@@ -77,7 +70,6 @@ Then can start and stop regtest deployment as follows
 ```
 npm run docker:start
 
-<<<<<<< HEAD
 npm run docker:rskj:fundAcc #optional, send RBTC and token to specific account
 
 #stop
@@ -185,9 +177,21 @@ Error: Debug Failure. False expression: Non-string value passed to `ts.resolveTy
 fix: https://github.com/microsoft/TypeScript/issues/49257
 ```
 npm install typescript@latest ts-node@latest
-=======
-docker run docker:rskj:fundAcc
+npm run docker:rskj:fundAcc
 #stop
 npm run docker:stop
->>>>>>> 51cef9a (initial changes for rsk)
+```
+
+## Integration tests
+Tests were failing for multiple reasons: 
+* websocket provider not working for RSKJ 
+* tests expecting default min `gasPrice =0` (geth in dev mode)
+* tests using eip-1559 type. 
+
+To see faliing integration tests run `npm run tests:int`
+
+Implemented initial set of fixes for a specific suite `EtherWalletProvider`
+
+```
+npm run test:int2
 ```

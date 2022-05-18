@@ -79,8 +79,8 @@ maxZeroConfAmount = 0
   macaroonpath = "docker/regtest/data/lnd/macaroons/admin.macaroon"
 
 [ethereum]
-# providerEndpoint = "http://127.0.0.1:8546" -> original used geth with ws (8546), so use 4445, not 4444 
-providerEndpoint = "http://127.0.0.1:4445"
+# providerEndpoint = "http://127.0.0.1:8546" -> original used geth with ws (8546), witch to http 4444 
+providerEndpoint = "http://127.0.0.1:4444"
 
 # these addresses are from initial boton deployment
 etherSwapAddress = "0x77045E71a7A2c50903d88e564cD72fab11e82051"
