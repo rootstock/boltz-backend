@@ -12,8 +12,9 @@ export const getGasPrices = async (provider: providers.Provider): Promise<Overri
   const feeData = await provider.getFeeData();
 
   return {
-    type: 2,
-    maxFeePerGas: feeData.maxFeePerGas!,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+    //type: 2,
+    //maxFeePerGas: feeData.maxFeePerGas!,
+    //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+     gasPrice: feeData.gasPrice!,
   };
 };
