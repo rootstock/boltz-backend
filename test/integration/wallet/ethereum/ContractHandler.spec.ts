@@ -72,9 +72,10 @@ describe('ContractHandler', () => {
   const lockupErc20 = async () => {
     const feeData = await provider.getFeeData();
     const approveTransaction = await tokenContract.approve(erc20Swap.address, amount, {
-      type: 2,
-      maxFeePerGas: feeData.maxFeePerGas!,
-      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+      //type: 2,
+      //maxFeePerGas: feeData.maxFeePerGas!,
+      //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+      gasPrice: feeData.gasPrice!,
     });
     await waitForTransaction(approveTransaction);
 
@@ -208,9 +209,10 @@ describe('ContractHandler', () => {
 
     const feeData = await provider.getFeeData();
     const approveTransaction = await tokenContract.approve(erc20Swap.address, amount, {
-      type: 2,
-      maxFeePerGas: feeData.maxFeePerGas!,
-      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+      //type: 2,
+      //maxFeePerGas: feeData.maxFeePerGas!,
+      //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+      gasPrice: feeData.gasPrice!,
     });
     await waitForTransaction(approveTransaction);
 
@@ -275,7 +277,7 @@ describe('ContractHandler', () => {
   });
 
   afterAll(async () => {
-    await provider.destroy();
+    //await provider.destroy();
   });
 });
 

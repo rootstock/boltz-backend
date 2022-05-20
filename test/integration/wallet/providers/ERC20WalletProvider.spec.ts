@@ -139,6 +139,6 @@ describe('ERC20WalletProvider', () => {
   });
 
   afterAll(async () => {
-    await provider.destroy();
+    //await provider.destroy();
   });
 });
