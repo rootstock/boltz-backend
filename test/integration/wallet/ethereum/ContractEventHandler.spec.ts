@@ -295,6 +295,6 @@ describe('ContractEventHandler', () => {
   afterAll(async () => {
     contractEventHandler.removeAllListeners();
 
-    await provider.destroy();
+    //await provider.destroy();
   });
 });

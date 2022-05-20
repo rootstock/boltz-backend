@@ -95,6 +95,7 @@ describe('ContractUtils', () => {
   });
 
   afterAll(async () => {
-    await provider.destroy();
+    //await provider.destroy(); //provider not used anywhere else..
+    await provider.listAccounts(); //something harmless since destroy is needed for ws not http 
   });
 });
