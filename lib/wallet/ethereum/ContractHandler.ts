@@ -80,6 +80,7 @@ class ContractHandler {
       timelock,
       {
         ...await getGasPrices(this.etherSwap.provider),
+        gasLimit: BigNumber.from(100000), //added to handle OOG on RSKJ
       }
     );
   };
@@ -98,6 +99,7 @@ class ContractHandler {
       timelock,
       {
         ...await getGasPrices(this.etherSwap.provider),
+        gasLimit: BigNumber.from(100000),  //added to handle OOG on RSKJ
       }
     );
   };

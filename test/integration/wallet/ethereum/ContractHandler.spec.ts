@@ -157,7 +157,7 @@ describe('ContractHandler', () => {
       preimage,
       amount,
       await signer.getAddress(),
-      timelock,
+      timelock
     );
     await waitForTransaction(transaction);
 
