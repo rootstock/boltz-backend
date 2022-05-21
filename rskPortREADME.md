@@ -2,9 +2,9 @@
 
 **Current status:** 
 * Running setup in `regtest` mode. 
-* 5/65 integration tests are failing. The failing tests are in 2 files
+* 3/65 integration tests are failing. The failing tests are in the following test suite
+
 ```
-test/integration/wallet/ethereum/ContractHandler.spec.ts
 test/integration/wallet/ethereum/ContractEventHandler.spec.ts
 ```
 
@@ -85,12 +85,16 @@ npm run docker:stop
 ```
 
 ## Integration tests
-Tests were failing for multiple reasons: 
-* websocket provider not working for RSKJ 
+
+Initially, Tests were failing for several reasons:
+
+* `websocketProvider`  was not working with RSKJ (did not investigate, switched to `JsonRpcProvider` over http)
 * tests expecting default minimum `gasPrice = 0` (geth in dev mode)
-* tests using eip-1559 type. 
+* tests using eip-1559 type (converted these to use `gasPrice`). 
+* a couple of ContractHandler suite tests failing due to  out of gas exception (increased `gaslimit`)
 
 Modify the `/usr/local/rskj/node.conf` in RSKJ to reset the minGasPrice = 0 (from 1). Then restart the container and redeploy contracts
+
 ```
 docker exec -it rskj bash # edit node.conf 
 ```

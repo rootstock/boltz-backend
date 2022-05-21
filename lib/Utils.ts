@@ -451,7 +451,7 @@ export const calculateUtxoTransactionFee = async (chainClient: ChainClient, tran
  */
 export const calculateEthereumTransactionFee = (transaction: ContractTransaction): number => {
   return transaction.gasLimit.mul(
-    transaction.type === 2 ? transaction.maxFeePerGas! : transaction.gasPrice!,
+    transaction.type === 2 ? transaction.maxFeePerGas! : transaction.gasPrice!.add(BigNumber.from(1)),
   ).div(etherDecimals).toNumber();
 };
 
