@@ -187,6 +187,10 @@ describe('ContractEventHandler', () => {
       etherSwapValues.amount,
       await signer.getAddress(),
       etherSwapValues.timelock,
+      {
+        gasPrice: 1,
+        gasLimit: "0xac890",
+      }
     );
     etherSwapTransactionHashes.claim = claimTransaction.hash;
 
@@ -209,6 +213,10 @@ describe('ContractEventHandler', () => {
       etherSwapValues.amount,
       etherSwapValues.claimAddress,
       etherSwapValues.timelock,
+      {
+        gasPrice: 1,
+        gasLimit: "0xac890",
+      }
     );
     etherSwapTransactionHashes.refund = refundTransaction.hash;
 
