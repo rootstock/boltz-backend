@@ -70,16 +70,7 @@ Then can start and stop regtest deployment as follows
 ```
 npm run docker:start
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-npm run docker:rskj:fundAcc
-=======
-docker run docker:rskj:fundAcc #optional, send to specific account
-=======
 docker run docker:rskj:fundAcc #optional, send RBTC and token to specific account
->>>>>>> 39e414d (continue fixing failing integration tests)
-
->>>>>>> 368f423 (start fixing integration test failures)
 #stop
 npm run docker:stop
 ```
