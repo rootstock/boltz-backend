@@ -1,6 +1,6 @@
 import { BigNumber, Signer } from 'ethers';
 import Logger from '../../Logger';
-import { etherDecimals } from '../../consts/Consts';
+import { etherDecimals, ETHER_SYMBOL } from '../../consts/Consts';
 import { getGasPrices } from '../ethereum/EthereumUtils';
 import WalletProviderInterface, { SentTransaction, WalletBalance } from './WalletProviderInterface';
 
@@ -11,7 +11,7 @@ class EtherWalletProvider implements WalletProviderInterface {
   private readonly ethTransferGas = BigNumber.from(21000);
 
   constructor(private logger: Logger, private signer: Signer) {
-    this.symbol = 'ETH';
+    this.symbol = ETHER_SYMBOL;
     this.logger.info('Initialized Ether wallet');
   }
 

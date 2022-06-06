@@ -16,6 +16,7 @@ import LndClient from './lightning/LndClient';
 import ChainClient from './chain/ChainClient';
 import Config, { ConfigType } from './Config';
 import { CurrencyType } from './consts/Enums';
+import { ETHER_SYMBOL } from './consts/Consts';
 import BackupScheduler from './backup/BackupScheduler';
 import ChainTipRepository from './db/repositories/ChainTipRepository';
 import EthereumManager from './wallet/ethereum/EthereumManager';
@@ -162,7 +163,7 @@ class Boltz {
       const rescanPromises: Promise<void>[] = [];
 
       for (const chainTip of chainTips) {
-        if (chainTip.symbol === 'ETH') {
+        if (chainTip.symbol === ETHER_SYMBOL) {
           if (this.walletManager.ethereumManager) {
             logRescan(chainTip);
             rescanPromises.push(this.walletManager.ethereumManager.contractEventHandler.rescan(chainTip.height));
@@ -261,7 +262,7 @@ class Boltz {
     this.config.ethereum.tokens.forEach((token) => {
       result.set(token.symbol, {
         symbol: token.symbol,
-        type: token.symbol === 'ETH' ? CurrencyType.Ether : CurrencyType.ERC20,
+        type: token.symbol === ETHER_SYMBOL ? CurrencyType.Ether : CurrencyType.ERC20,
         limits: {
           ...token,
         },

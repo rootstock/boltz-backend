@@ -150,7 +150,7 @@ class LndClient extends BaseClient implements LndClient {
         return false;
       }
     }
-
+    this.logger.verbose(`LndClient Connected.`);
     return true;
   };
 
@@ -222,11 +222,15 @@ class LndClient extends BaseClient implements LndClient {
   };
 
   private unaryCall = <T, U>(client: any, methodName: string, params: T): Promise<U> => {
+    
+    this.logger.debug(`LndClient - unaryCall - ${methodName} - ${params}.`);
     return new Promise((resolve, reject) => {
       (client[methodName] as LndMethodFunction)(params, this.meta, (err: ServiceError, response: GrpcResponse) => {
         if (err) {
+          this.logger.error(`LndClient - unaryCall - error - ${err.message}.`);
           reject(err);
         } else {
+          this.logger.debug(`LndClient - unaryCall - success.`);
           resolve(response.toObject());
         }
       });
@@ -612,6 +616,7 @@ class LndClient extends BaseClient implements LndClient {
 
     invoiceSubscription
       .on('data', (invoice: lndrpc.Invoice) => {
+        this.logger.debug(`InvoiceSubscription received`);
         if (invoice.getState() === lndrpc.Invoice.InvoiceState.ACCEPTED) {
           this.logger.debug(`${LndClient.serviceName} ${this.symbol} accepted ${invoice.getHtlcsList().length} HTLC${invoice.getHtlcsList().length > 1 ? 's' : ''} for invoice: ${invoice.getPaymentRequest()}`);
 
@@ -648,11 +653,13 @@ class LndClient extends BaseClient implements LndClient {
 
     this.peerEventSubscription = this.lightning!.subscribePeerEvents(new lndrpc.PeerEventSubscription(), this.meta)
       .on('data', (event: lndrpc.PeerEvent) => {
+        this.logger.verbose(`Peer event subscription : ${event.getType()}`);
         if (event.getType() === lndrpc.PeerEvent.EventType.PEER_ONLINE) {
           this.emit('peer.online', event.getPubKey());
         }
       })
       .on('error', async (error) => {
+        this.logger.error(`Peer event error.`);
         await this.handleSubscriptionError('peer event', error);
       });
   };
@@ -664,11 +671,13 @@ class LndClient extends BaseClient implements LndClient {
 
     this.channelEventSubscription = this.lightning!.subscribeChannelEvents(new lndrpc.ChannelEventSubscription(), this.meta)
       .on('data', (event: lndrpc.ChannelEventUpdate) => {
+        this.logger.verbose(`Channel event: ${event.getType()}.`);
         if (event.getType() === lndrpc.ChannelEventUpdate.UpdateType.ACTIVE_CHANNEL) {
           this.emit('channel.active', event.getActiveChannel()!.toObject());
         }
       })
       .on('error', async(error) => {
+        this.logger.error(`Channel event error ${error}.`);
         await this.handleSubscriptionError('channel event', error);
       });
   };

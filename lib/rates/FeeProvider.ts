@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers';
 import Logger from '../Logger';
 import { PairConfig } from '../consts/Types';
+import { ETHER_SYMBOL } from '../consts/Consts';
 import DataAggregator from './data/DataAggregator';
 import { BaseFeeType, OrderSide } from '../consts/Enums';
 import { etherDecimals, gweiDecimals } from '../consts/Consts';
@@ -141,7 +142,7 @@ class FeeProvider {
         break;
       }
 
-      case 'ETH': {
+      case ETHER_SYMBOL: {
         const relativeFee = feeMap.get(chainCurrency)!;
         const claimCost = this.calculateEtherGasCost(relativeFee, FeeProvider.gasUsage.EtherSwap.claim);
 
@@ -156,10 +157,10 @@ class FeeProvider {
         break;
       }
 
-      // If it is not BTC, LTC or ETH, it is an ERC20 token
+      // If it is not BTC, LTC or rBTC, it is an ERC20 token
       default: {
-        const relativeFee = feeMap.get('ETH')!;
-        const rate = this.dataAggregator.latestRates.get(getPairId({ base: 'ETH', quote: chainCurrency }))!;
+        const relativeFee = feeMap.get(ETHER_SYMBOL)!;
+        const rate = this.dataAggregator.latestRates.get(getPairId({ base: ETHER_SYMBOL, quote: chainCurrency }))!;
 
         const claimCost = this.calculateTokenGasCosts(
           rate,

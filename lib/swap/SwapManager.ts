@@ -9,7 +9,7 @@ import SwapNursery from './SwapNursery';
 import LndClient from '../lightning/LndClient';
 import RateProvider from '../rates/RateProvider';
 import ReverseSwap from '../db/models/ReverseSwap';
-import { ReverseSwapOutputType } from '../consts/Consts';
+import { ReverseSwapOutputType, ETHER_SYMBOL } from '../consts/Consts';
 import RoutingHintsProvider from './RoutingHintsProvider';
 import SwapRepository from '../db/repositories/SwapRepository';
 import InvoiceExpiryHelper from '../service/InvoiceExpiryHelper';
@@ -314,7 +314,7 @@ class SwapManager {
         } else {
           return {
             blocks: await currency.provider!.getBlockNumber(),
-            blockTime: TimeoutDeltaProvider.blockTimes.get('ETH')!,
+            blockTime: TimeoutDeltaProvider.blockTimes.get(ETHER_SYMBOL)!,
           };
         }
       };
@@ -552,6 +552,7 @@ class SwapManager {
       });
     }
 
+    this.logger.verbose(`Success - Creating new Reverse Swap from ${receivingCurrency.symbol} to ${sendingCurrency.symbol}: ${id}`);
     return {
       id,
       lockupAddress,

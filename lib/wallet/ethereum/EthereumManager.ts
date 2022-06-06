@@ -16,6 +16,7 @@ import ChainTipRepository from '../../db/repositories/ChainTipRepository';
 import EtherWalletProvider from '../providers/EtherWalletProvider';
 import ERC20WalletProvider from '../providers/ERC20WalletProvider';
 import EthereumTransactionTracker from './EthereumTransactionTracker';
+import { ETHER_SYMBOL } from '../../consts/Consts';
 
 type Network = {
   chainId: number;
@@ -97,7 +98,7 @@ class EthereumManager {
     this.logger.verbose(`Using Ethereum signer: ${this.address}`);
 
     const currentBlock = await signer.provider!.getBlockNumber();
-    const chainTip = await chainTipRepository.findOrCreateTip('ETH', currentBlock);
+    const chainTip = await chainTipRepository.findOrCreateTip(ETHER_SYMBOL, currentBlock);
 
     this.contractHandler.init(this.etherSwap, this.erc20Swap);
     this.contractEventHandler.init(this.etherSwap, this.erc20Swap);
@@ -152,9 +153,9 @@ class EthereumManager {
           throw Errors.INVALID_ETHEREUM_CONFIGURATION(`missing decimals configuration for token: ${token.symbol}`);
         }
       } else {
-        if (token.symbol === 'ETH') {
-          if (!wallets.has('ETH')) {
-            wallets.set('ETH', new Wallet(
+        if (token.symbol === ETHER_SYMBOL) {
+          if (!wallets.has(ETHER_SYMBOL)) {
+            wallets.set(ETHER_SYMBOL, new Wallet(
               this.logger,
               CurrencyType.Ether,
               new EtherWalletProvider(this.logger, signer),

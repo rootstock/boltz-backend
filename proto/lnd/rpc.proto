@@ -150,12 +150,6 @@ service Lightning {
         returns (GetRecoveryInfoResponse);
 
     // TODO(roasbeef): merge with below with bool?
-    /* lncli: `pendingchannels`
-    PendingChannels returns a list of all the channels that are currently
-    considered "pending". A channel is pending if it has finished the funding
-    workflow and is waiting for confirmations for the funding txn, or is in the
-    process of closure, either initiated cooperatively or non-cooperatively.
-    */
     rpc PendingChannels (PendingChannelsRequest)
         returns (PendingChannelsResponse);
 
