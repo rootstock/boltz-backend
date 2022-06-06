@@ -229,6 +229,7 @@ class LndClient extends BaseClient implements LndClient {
           this.logger.error(`LndClient - unaryCall - error - ${err.message}.`);
           reject(err);
         } else {
+          this.logger.debug(`LndClient - unaryCall - success.`);
           resolve(response.toObject());
         }
       });
