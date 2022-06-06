@@ -13,6 +13,7 @@ import ReverseSwapRepository from '../db/repositories/ReverseSwapRepository';
 import { CurrencyType, SwapUpdateEvent } from '../consts/Enums';
 import EthereumManager from '../wallet/ethereum/EthereumManager';
 import { ERC20SwapValues, EtherSwapValues } from '../consts/Types';
+import { ETHER_SYMBOL } from '../consts/Consts';
 import { getChainCurrency, getHexString, splitPairId } from '../Utils';
 import ERC20WalletProvider from '../wallet/providers/ERC20WalletProvider';
 
@@ -128,7 +129,7 @@ class EthereumNursery extends EventEmitter {
       const { base, quote } = splitPairId(swap.pair);
       const chainCurrency = getChainCurrency(base, quote, swap.orderSide, false);
 
-      if (chainCurrency !== 'ETH') {
+      if (chainCurrency !== ETHER_SYMBOL) {
         return;
       }
 
@@ -310,7 +311,7 @@ class EthereumNursery extends EventEmitter {
       const wallet = this.getEthereumWallet(chainCurrency);
 
       if (wallet) {
-        this.emit('swap.expired', expirableSwap, wallet.symbol === 'ETH');
+        this.emit('swap.expired', expirableSwap, wallet.symbol === ETHER_SYMBOL);
       }
     }
   };
@@ -325,7 +326,7 @@ class EthereumNursery extends EventEmitter {
       const wallet = this.getEthereumWallet(chainCurrency);
 
       if (wallet) {
-        this.emit('reverseSwap.expired', expirableReverseSwap, wallet.symbol === 'ETH');
+        this.emit('reverseSwap.expired', expirableReverseSwap, wallet.symbol === ETHER_SYMBOL);
       }
     }
   };

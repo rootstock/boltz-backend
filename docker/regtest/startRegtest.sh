@@ -6,6 +6,8 @@ docker run \
   --volume "${PWD}"/docker/regtest/data/core/cookies:/cookies \
   -p 10735:10735 \
   -p 9736:9735 \
+  -p 9737:9737 \
+  -p 9738:9738 \
   -p 18443:18443 \
   -p 18444:18444 \
   -p 19443:19443 \

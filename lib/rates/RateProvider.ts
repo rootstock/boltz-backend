@@ -1,6 +1,7 @@
 import Errors from './Errors';
 import Logger from '../Logger';
 import { PairConfig } from '../consts/Types';
+import { ETHER_SYMBOL } from '../consts/Consts';
 import RateCalculator from './RateCalculator';
 import DataAggregator from './data/DataAggregator';
 import { Currency } from '../wallet/WalletManager';
@@ -113,10 +114,10 @@ class RateProvider {
       } else {
         this.dataAggregator.registerPair(pair.base, pair.quote);
 
-        // TODO: find way to get ETH/<token> rate without having to hardcode it here
+        // TODO: find way to get rBTC/<token> rate without having to hardcode it here
         const checkAndRegisterToken = (symbol: string) => {
           if (this.currencies.get(symbol)!.type === CurrencyType.ERC20) {
-            this.dataAggregator.registerPair('ETH', symbol);
+            this.dataAggregator.registerPair(ETHER_SYMBOL, symbol);
           }
         };
 

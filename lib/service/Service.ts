@@ -20,7 +20,7 @@ import RateProvider, { PairType } from '../rates/RateProvider';
 import WalletManager, { Currency } from '../wallet/WalletManager';
 import ReferralRepository from '../db/repositories/ReferralRepository';
 import SwapManager, { ChannelCreationInfo } from '../swap/SwapManager';
-import { etherDecimals, ethereumPrepayMinerFeeGasLimit, gweiDecimals } from '../consts/Consts';
+import { ETHER_SYMBOL, etherDecimals, ethereumPrepayMinerFeeGasLimit, gweiDecimals } from '../consts/Consts';
 import { BaseFeeType, CurrencyType, OrderSide, ServiceInfo, ServiceWarning } from '../consts/Enums';
 import {
   Balance,
@@ -449,12 +449,12 @@ class Service {
       const currency = this.getCurrency(symbol);
       const isERC20 = currency.type === CurrencyType.ERC20;
 
-      map.set(isERC20 ? 'ETH' : symbol, await estimateFee(currency));
+      map.set(isERC20 ? ETHER_SYMBOL : symbol, await estimateFee(currency));
     } else {
       for (const [symbol, currency] of this.currencies) {
         if (currency.type === CurrencyType.ERC20) {
-          if (!map.has('ETH')) {
-            map.set('ETH', await estimateFee(currency));
+          if (!map.has(ETHER_SYMBOL)) {
+            map.set(ETHER_SYMBOL, await estimateFee(currency));
           }
 
           continue;
@@ -916,6 +916,7 @@ class Service {
 
     // Not the pretties way and also not the right spot to do input validation but
     // only at this point in time the type of the sending currency is known
+    this.logger.verbose(`Checking parameters depending on type: ${sendingCurrency.type}`)
     switch (sendingCurrency.type) {
       case CurrencyType.BitcoinLike:
         if (args.claimPublicKey === undefined) {
@@ -1010,9 +1011,9 @@ class Service {
         const gasPrice = await sendingCurrency.provider!.getGasPrice();
         prepayMinerFeeOnchainAmount = ethereumPrepayMinerFeeGasLimit.mul(gasPrice).div(etherDecimals).toNumber();
 
-        const sendingAmountRate = sending === 'ETH' ? 1 : this.rateProvider.rateCalculator.calculateRate('ETH', sending);
+        const sendingAmountRate = sending === ETHER_SYMBOL ? 1 : this.rateProvider.rateCalculator.calculateRate(ETHER_SYMBOL, sending);
 
-        const receivingAmountRate = receiving === 'ETH' ? 1 : this.rateProvider.rateCalculator.calculateRate('ETH', receiving);
+        const receivingAmountRate = receiving === ETHER_SYMBOL ? 1 : this.rateProvider.rateCalculator.calculateRate(ETHER_SYMBOL, receiving);
         prepayMinerFeeInvoiceAmount = Math.ceil(prepayMinerFeeOnchainAmount * receivingAmountRate);
 
         // If the invoice amount was specified, the onchain and hold invoice amounts need to be adjusted

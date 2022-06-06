@@ -108,3 +108,76 @@ An alternative is to modify the wallet scripts to explicitly pass `gasPrice` of 
 ## Deployment
 
 I created a config file `rskBoltzConfig.toml` for running the backend. The settings are from `docs/regtest.md`. Note that deployment config will be different. For regtest environment, the 3 addresses of the 3 deployed contracts (`EtherSwap`, `ERC20Swap` and the `ERC20Token`) are added. These addresses are reproducible for a given private key + fresh deployment.
+
+
+## Errors
+
+
+### Error:
+```
+reason: 'processing response error',
+  code: 'SERVER_ERROR',
+  body: `{"jsonrpc":"2.0","id":71,"error":{"code":-32010,"message":"the sender account doesn't exist"}}\n`,
+  error: Error: the sender account doesn't exist
+```
+Fix: (fund account)
+```
+    "docker:rskj:fundAcc": "./bin/boltz-ethereum send 1000 '0xdebe71e1de41fc77c44df4b6db940026e31b0e71' && ./bin/boltz-ethereum send 1000 '0xdebe71e1de41fc77c44df4b6db940026e31b0e71' --token && ./bin/boltz-ethereum send 1000 '0xaa73dfb3a60fDb7093892E4cc883160e13E67b31' --token && ./bin/boltz-ethereum send 1000 '0xaa73dfb3a60fDb7093892E4cc883160e13E67b31'",
+```
+Mnemonic: 
+```
+~/Library/Application\ Support/Boltz/seed.dat
+```
+
+### Error:
+```
+error: Could not initialize Boltz: Validation error
+name: 'SequelizeUniqueConstraintError',
+  errors: [
+    ValidationErrorItem {
+      message: 'nonce must be unique',
+      type: 'unique violation',
+      path: 'nonce',
+      value: 0,
+      origin: 'DB',
+      instance: [PendingEthereumTransaction],
+      validatorKey: 'not_unique',
+      validatorName: null,
+      validatorArgs: []
+    }
+  ],
+```
+Clean DB 
+```
+rm /Users/<username>/Library/Application\ Support/Boltz/boltz.db
+```
+
+
+### Error:
+When running node v16, I get this:
+```
+Error: No native build was found for platform=darwin arch=x64 runtime=node abi=93 uv=1 libc=glibc node=16.15.0
+    loaded from: /Users/patricio/workspace/research/payments/boltz-backend-rootstock/node_modules/zeromq
+```
+and with node v14:
+```
+/Users/patricio/workspace/research/payments/boltz-backend-rootstock/node_modules/discord.js/src/rest/APIRequest.js:34
+    agent ??= new https.Agent({ ...this.client.options.http.agent, keepAlive: true });
+          ^^^
+
+SyntaxError: Unexpected token '??='
+```
+fix: 
+```
+npm install --build-from-resource
+```
+
+
+### Error:
+```
+Error: Debug Failure. False expression: Non-string value passed to `ts.resolveTypeReferenceDirective`, likely by a wrapping package working with an outdated `resolveTypeReferenceDirectives` signature. This is probably not a problem in TS itself.
+```
+fix: https://github.com/microsoft/TypeScript/issues/49257
+```
+npm install typescript@latest ts-node@latest
+```
