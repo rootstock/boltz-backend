@@ -1,0 +1,814 @@
+{
+	"info": {
+		"_postman_id": "f4cd516e-054f-4102-86ae-dc782f28f4d7",
+		"name": "Boltz Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21285564"
+	},
+	"item": [
+		{
+			"name": "createswap",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"reversesubmarine\",\n    \"pairId\": \"BTC/rBTC\",\n    \"invoiceAmount\": 10000,\n    \"orderSide\": \"sell\",\n    \"claimPublicKey\": \"03483857b292cfa714592e379c0b369efc643a3a4fb40b44bbb4bc2dc672ecfea5\",\n    \"preimageHash\": \"ce4baf8528262773dfc8b1fe10f7fafd7872b37fb1e70b3060b5bcf2988b72bd\",\n    \"claimAddress\": \"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826\",\n    \"prepayMinerFee\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/createswap",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"createswap"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "createswap",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"reversesubmarine\",\n    \"pairId\": \"BTC/rBTC\",\n    \"invoiceAmount\": 1000000,\n    \"orderSide\": \"sell\",\n    \"claimPublicKey\": \"03483857b292cfa714592e379c0b369efc643a3a4fb40b44bbb4bc2dc672ecfea5\",\n    \"preimageHash\": \"c049de5642d9bdd7e319b6c573ab8404722ce7ed5fdf2a4bff993a7e075c0e01\",\n    \"claimAddress\": \"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826\",\n    \"prepayMinerFee\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/createswap",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"createswap"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "489"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1e9-xG5v0LRJM1jjT/Kxaxl1vm26dPk\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 18:36:03 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"NSQ95D\",\n    \"invoice\": \"lnbcrt10m1p3f54ynpp5cpyau4jzmx7a0ccekmzh82uyq3ezeeldtl0j5jllnya8up6upcqsdpq2djkuepqw3hjqujz23pjqctyv3ex2umncqzylxqrrsssp5md24rwg0gm0jec502xzxvk68j8mphfwta76cyr68z0y8e6tmxr0q9qyyssqz74k03zsp63xtnsnk5r6sjwqka3jgspzgrmvtlp8a9qf7qf4yaa9lvjjldh5madd7a42m7yzdml3p9xzkl7jh8sg733g63dc238addqq8gglzh\",\n    \"refundAddress\": \"0xABf0E4a3aB8628CAC2D0539679233B607c3c6f42\",\n    \"lockupAddress\": \"0x77045E71a7A2c50903d88e564cD72fab11e82051\",\n    \"timeoutBlockHeight\": 5772,\n    \"onchainAmount\": 995000\n}"
+				}
+			]
+		},
+		{
+			"name": "claim",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"reversesubmarine\",\n    \"invoice\": \"lnbcrt20u1p32hhgkpp5w8k7wvgtrgmy75n3e7zw5wkq22ga2hltnv6pj9024006u33g5eysdpq2djkuepqw3hjqujz23pjqctyv3ex2umncqzylxqrrsssp5w4smx0vu6f9zp5yga8n04ejxpnlx9r4s5qeymsvdu7lsv9ffz69q9qyyssqun0l5r3vw5uulenel9m097z0hfqse9276d29y2slzkzmfs0938mk2zl75q5ugcey2wqmmvjrxklfpj4pev3xgpeyre9v7vs5v4yf5mspefj7sc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/setinvoice",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"setinvoice"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "createswap",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"reversesubmarine\",\n    \"pairId\": \"BTC/rBTC\",\n    \"invoiceAmount\": 1000000,\n    \"orderSide\": \"sell\",\n    \"claimPublicKey\": \"03483857b292cfa714592e379c0b369efc643a3a4fb40b44bbb4bc2dc672ecfea5\",\n    \"preimageHash\": \"c049de5642d9bdd7e319b6c573ab8404722ce7ed5fdf2a4bff993a7e075c0e01\",\n    \"claimAddress\": \"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826\",\n    \"prepayMinerFee\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/createswap",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"createswap"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "489"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1e9-xG5v0LRJM1jjT/Kxaxl1vm26dPk\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 18:36:03 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"NSQ95D\",\n    \"invoice\": \"lnbcrt10m1p3f54ynpp5cpyau4jzmx7a0ccekmzh82uyq3ezeeldtl0j5jllnya8up6upcqsdpq2djkuepqw3hjqujz23pjqctyv3ex2umncqzylxqrrsssp5md24rwg0gm0jec502xzxvk68j8mphfwta76cyr68z0y8e6tmxr0q9qyyssqz74k03zsp63xtnsnk5r6sjwqka3jgspzgrmvtlp8a9qf7qf4yaa9lvjjldh5madd7a42m7yzdml3p9xzkl7jh8sg733g63dc238addqq8gglzh\",\n    \"refundAddress\": \"0xABf0E4a3aB8628CAC2D0539679233B607c3c6f42\",\n    \"lockupAddress\": \"0x77045E71a7A2c50903d88e564cD72fab11e82051\",\n    \"timeoutBlockHeight\": 5772,\n    \"onchainAmount\": 995000\n}"
+				}
+			]
+		},
+		{
+			"name": "swapstatus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"NSQ95D\"   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/swapstatus",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"swapstatus"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "swapstatus",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"NSQ95D\"   \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/swapstatus",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"swapstatus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"19-d0/hIDGREYNSxs3v2RwfDmB9igw\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 19:05:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"swap.created\"\n}"
+				}
+			]
+		},
+		{
+			"name": "getswaptransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"NSQ95D\"   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/getswaptransaction",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"getswaptransaction"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "swapstatus",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"NSQ95D\"   \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/swapstatus",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"swapstatus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"19-d0/hIDGREYNSxs3v2RwfDmB9igw\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 19:05:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"swap.created\"\n}"
+				}
+			]
+		},
+		{
+			"name": "gettransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"currency\": \"BTC\",\n    \"transactionId\": \"cf095bcd314943629e412b84b80ba5e554bdf96fc8b7e37dfb107b9b91ba6c3f\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/gettransaction",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"gettransaction"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "swapstatus",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"NSQ95D\"   \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/swapstatus",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"swapstatus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"19-d0/hIDGREYNSxs3v2RwfDmB9igw\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 19:05:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"swap.created\"\n}"
+				}
+			]
+		},
+		{
+			"name": "getswapstatus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/getswapstatus",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"getswapstatus"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "getswapstatus",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/getswapstatus",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"getswapstatus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2a-8DO4QttoQznlH1e01UhoKFYT4CY\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 19:11:51 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"status\": \"swap.created\",\n        \"key\": \"NSQ95D\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "getinfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BOLTZ}}/getinfo",
+					"host": [
+						"{{BOLTZ}}"
+					],
+					"path": [
+						"getinfo"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "getswapstatus",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BOLTZ}}/getswapstatus",
+							"host": [
+								"{{BOLTZ}}"
+							],
+							"path": [
+								"getswapstatus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2a-8DO4QttoQznlH1e01UhoKFYT4CY\""
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 03 Jun 2022 19:11:51 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"status\": \"swap.created\",\n        \"key\": \"NSQ95D\"\n    }\n]"
+				}
+			]
+		}
+	]
+}
