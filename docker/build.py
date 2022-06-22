@@ -93,10 +93,6 @@ IMAGES: Dict[str, Image] = {
         arguments=[
             UBUNTU_VERSION,
             BITCOIN_BUILD_ARG,
-             BuildArgument(
-                name="ELEMENTS_VERSION",
-                value=ELEMENTS_VERSION,
-            ),
             BuildArgument(
                 name="LND_VERSION",
                 value=LND_VERSION,

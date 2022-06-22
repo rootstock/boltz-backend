@@ -25,11 +25,11 @@ function startNodes ()  {
   echo "Starting nodes"
 
   bitcoind
-  elementsd
+  #elementsd
 
   # Wait for the nodes to start
   waitForNode bitcoin-cli
-  waitForNode elements-cli
+  #waitForNode elements-cli
 
   echo "Started nodes"
 }
@@ -50,7 +50,7 @@ function startLnds () {
 
 function stopNodes () {
   killall bitcoind
-  killall elementsd
+  #killall elementsd
 }
 
 function stopLnds () {

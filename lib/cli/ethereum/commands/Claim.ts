@@ -1,6 +1,6 @@
 import { Arguments } from 'yargs';
 import { crypto } from 'bitcoinjs-lib';
-import { ContractTransaction } from 'ethers';
+import { ContractTransaction, BigNumber } from 'ethers';
 import { getHexBuffer } from '../../../Utils';
 import BuilderComponents from '../../BuilderComponents';
 import { connectEthereum, getContracts } from '../EthereumUtils';
@@ -42,6 +42,11 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
       etherSwapValues.amount,
       etherSwapValues.refundAddress,
       etherSwapValues.timelock,
+      //TODO fix this workaround with proper gas estimation (there are more in the project, unify this behaviour)
+      {
+        gasLimit: BigNumber.from(100000),
+        gasPrice: BigNumber.from(1)
+      }
     );
   }
 
