@@ -24,10 +24,10 @@ jobs:
         run: npm ci
 
       - name: Start containers
-        run: npm run docker:regtest && npm run docker:geth
+        run: npm run docker:regtest && npm run docker:rskj
 
       - name: Deploy Ethereum contracts
-        run: sleep 15 && npm run docker:geth:deploy
+        run: sleep 15 && npm run docker:rskj:deploy
 
       - name: Compile
         run: npm run compile
