@@ -26,10 +26,15 @@ class ContractHandler {
     claimAddress: string,
     timeLock: number,
   ): Promise<ContractTransaction> => {
-    this.logger.debug(`Locking ${amount} Ether with preimage hash: ${getHexString(preimageHash)}`);
-    return this.etherSwap.lock(preimageHash, claimAddress, timeLock, {
+    this.logger.debug(`Locking ${amount} Ether with preimage hash: ${getHexString(preimageHash)} , claimAddress: ${claimAddress}, timelock: ${timeLock}`);
+    
+    //TODO : fix these gas issues
+    let txParams = {
       value: amount,
       ...await getGasPrices(this.etherSwap.provider),
+    };
+    return this.etherSwap.lock(preimageHash, claimAddress, timeLock, {
+      ...txParams
     });
   };
 

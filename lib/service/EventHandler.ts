@@ -231,7 +231,7 @@ class EventHandler extends EventEmitter {
     status: SwapUpdateEvent,
     failureReason: string,
   ) => {
-    this.logger.warn(`Reverse swap ${reverseSwap.id} failed: ${failureReason}`);
+    this.logger.warn(`Reverse swap ${reverseSwap.id} failed: ${failureReason}, status: ${status}`);
 
     this.emit('swap.update', reverseSwap.id, { status, failureReason });
     this.emit('swap.failure', reverseSwap, true, failureReason);

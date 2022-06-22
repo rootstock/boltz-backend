@@ -39,7 +39,7 @@ GETH_VERSION = "1.10.15"
 
 C_LIGHTNING_VERSION = "0.10.2"
 ECLAIR_VERSION = "0.6.2"
-LND_VERSION = "0.14.2-beta"
+LND_VERSION = "0.14.3-beta"
 
 IMAGES: Dict[str, Image] = {
     "bitcoin-core": Image(
@@ -100,14 +100,14 @@ IMAGES: Dict[str, Image] = {
                 name="BITCOIN_VERSION",
                 value=BITCOIN_VERSION,
             ),
-            BuildArgument(
-                name="LITECOIN_VERSION",
-                value=LITECOIN_VERSION,
-            ),
-             BuildArgument(
-                name="ELEMENTS_VERSION",
-                value=ELEMENTS_VERSION,
-            ),
+            #BuildArgument(
+            #    name="LITECOIN_VERSION",
+            #    value=LITECOIN_VERSION,
+            #),
+            # BuildArgument(
+            #    name="ELEMENTS_VERSION",
+            #    value=ELEMENTS_VERSION,
+            #),
             BuildArgument(
                 name="LND_VERSION",
                 value=LND_VERSION,

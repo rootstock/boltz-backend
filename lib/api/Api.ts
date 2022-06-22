@@ -58,6 +58,7 @@ class Api {
     this.app.route('/getcontracts').get(controller.getContracts);
     this.app.route('/getfeeestimation').get(controller.getFeeEstimation);
     this.app.route('/getswapstatus').get(controller.allSwapStatus);
+    this.app.route('/getinfo').get(controller.getInfo);
 
     // POST requests
     this.app.route('/routinghints').post(controller.routingHints);
