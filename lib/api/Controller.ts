@@ -238,25 +238,6 @@ class Controller {
     }
   };
 
-  public allSwapStatus = (req: Request, res: Response): void => {
-    try {
-
-      const response:any[] = [];
-      
-      this.pendingSwapInfos.forEach((value,key:string)=>{
-        response.push({...value, key});
-      });
-
-      if (response) {
-        this.successResponse(res, response);
-      } else {
-        this.errorResponse(req, res, `could not find swaps`, 404);
-      }
-    } catch (error) {
-      this.errorResponse(req, res, error);
-    }
-  };
-
   public swapRates = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = this.validateRequest(req.body, [
