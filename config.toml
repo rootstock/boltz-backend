@@ -12,6 +12,7 @@ timeoutDelta = 1_440
 [[pairs]]
 base = "BTC"
 quote = "rDOC"
+rate = 20000
 fee = 5
 timeoutDelta = 180
 

@@ -223,14 +223,12 @@ class LndClient extends BaseClient implements LndClient {
 
   private unaryCall = <T, U>(client: any, methodName: string, params: T): Promise<U> => {
     
-    this.logger.debug(`LndClient - unaryCall - ${methodName} - ${params}.`);
     return new Promise((resolve, reject) => {
       (client[methodName] as LndMethodFunction)(params, this.meta, (err: ServiceError, response: GrpcResponse) => {
         if (err) {
           this.logger.error(`LndClient - unaryCall - error - ${err.message}.`);
           reject(err);
         } else {
-          this.logger.debug(`LndClient - unaryCall - success.`);
           resolve(response.toObject());
         }
       });
