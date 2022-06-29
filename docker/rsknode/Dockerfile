@@ -1,11 +1,10 @@
-FROM openjdk:8-jdk-slim-buster as build
+FROM openjdk:8-jdk-slim-buster
 RUN apt-get update -y && \
     apt-get install -y git curl gnupg && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get autoremove -y && \
     apt-get clean
 
-FROM openjdk:8-jdk-slim-buster
 
 
 WORKDIR /usr/local/rskj
