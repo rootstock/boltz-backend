@@ -8,7 +8,9 @@ RUN apt-get update -y && \
 
 
 WORKDIR /usr/local/rskj
-RUN curl https://github.com/rsksmart/rskj/releases/download/IRIS-3.3.0/rskj-core-3.3.0-IRIS-all.jar --output ./rsk.jar
+RUN echo "Downloading rskj jar..."
+RUN curl -L "https://github.com/rsksmart/rskj/releases/download/IRIS-3.3.0/rskj-core-3.3.0-IRIS-all.jar" --output ./rsk.jar
+RUN echo "Downloaded rskj jar!"
 COPY node.conf ./node.conf
 COPY logback.xml ./logback.xml
 
