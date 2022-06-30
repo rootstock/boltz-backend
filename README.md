@@ -37,7 +37,7 @@ nvm --version
 nvm install 16
 ```
 
-## Install project and start in regtest mode
+## Set up regtest environment
 
 Move into project directory and install dependencies
 ```
@@ -45,24 +45,29 @@ cd boltz*
 
 npm install
 npm run compile
-```
-
-Switch out the Bltz-core hardhat config with a modified one (RSK network)
-
-```
-rm node_modules/boltz-core/hardhat.config.ts
-cp ./hardhat.config.rskModified.ts node_modules/boltz-core/hardhat.config.ts
+npm run docker:regtest:build
 ```
 
 Then can start and stop regtest deployment as follows
 
 ```
+#start
 npm run docker:start
 
-docker run docker:rskj:fundAcc #optional, send RBTC and token to specific account
 #stop
 npm run docker:stop
 ```
+
+## Start backend server
+
+```
+#start
+npm start
+
+#in dev mode
+npm run compile && npm start
+```
+
 
 ## Integration tests
 
@@ -87,7 +92,8 @@ An alternative is to modify the wallet scripts to explicitly pass `gasPrice` of 
 
 ## Deployment
 
-I created a config file `rskBoltzConfig.toml` for running the backend. The settings are from `docs/regtest.md`. Note that deployment config will be different. For regtest environment, the 3 addresses of the 3 deployed contracts (`EtherSwap`, `ERC20Swap` and the `ERC20Token`) are added. These addresses are reproducible for a given private key + fresh deployment.
+I created a config file `config.toml` for running the backend. The settings are from `docs/regtest.md`. Note that deployment config will be different. 
+For regtest environment, the 3 addresses of the 3 deployed contracts (`EtherSwap`, `ERC20Swap` and the `ERC20Token`) are added. These addresses are reproducible for a given private key + fresh deployment.
 
 
 ## Errors
