@@ -65,7 +65,7 @@ npm run docker:stop
 npm start
 
 #in dev mode
-npm run compile && npm start
+npm run dev
 ```
 
 
