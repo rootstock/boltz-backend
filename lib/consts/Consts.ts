@@ -8,7 +8,7 @@ export const ReverseSwapOutputType = OutputType.Bech32;
 export const etherDecimals = BigNumber.from(1); //BigNumber.from(10).pow(BigNumber.from(10));
 
 // Symbol of the etherlike chain
-export const ETHER_SYMBOL = "rBTC";
+export const ETHER_SYMBOL = 'rBTC';
 
 // Decimals from GWEI to WEI
 export const gweiDecimals = BigNumber.from(10).pow(BigNumber.from(9));

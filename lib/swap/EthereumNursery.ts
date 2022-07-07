@@ -5,7 +5,7 @@ import Errors from './Errors';
 import Logger from '../Logger';
 import Swap from '../db/models/Swap';
 import Wallet from '../wallet/Wallet';
-import { etherDecimals } from '../consts/Consts';
+import { etherDecimals, ETHER_SYMBOL } from '../consts/Consts';
 import SwapRepository from '../db/repositories/SwapRepository';
 import ReverseSwap from '../db/models/ReverseSwap';
 import WalletManager from '../wallet/WalletManager';
@@ -13,7 +13,6 @@ import ReverseSwapRepository from '../db/repositories/ReverseSwapRepository';
 import { CurrencyType, SwapUpdateEvent } from '../consts/Enums';
 import EthereumManager from '../wallet/ethereum/EthereumManager';
 import { ERC20SwapValues, EtherSwapValues } from '../consts/Types';
-import { ETHER_SYMBOL } from '../consts/Consts';
 import { getChainCurrency, getHexString, splitPairId } from '../Utils';
 import ERC20WalletProvider from '../wallet/providers/ERC20WalletProvider';
 

@@ -1,10 +1,9 @@
 import { BigNumber } from 'ethers';
 import Logger from '../Logger';
 import { PairConfig } from '../consts/Types';
-import { ETHER_SYMBOL } from '../consts/Consts';
 import DataAggregator from './data/DataAggregator';
 import { BaseFeeType, OrderSide } from '../consts/Enums';
-import { etherDecimals, gweiDecimals } from '../consts/Consts';
+import { etherDecimals, gweiDecimals, ETHER_SYMBOL } from '../consts/Consts';
 import { getChainCurrency, getPairId, mapToObject, splitPairId, stringify } from '../Utils';
 
 type ReverseMinerFees = {

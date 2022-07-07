@@ -1,7 +1,7 @@
 //This is modified for initial RSK porting.
 // The original is in the boltz-core repo and available (with other deps) only after we run npm install
 // since we are making changes to networks, we can make changes in this file and ...
-//   ... copy it over to node_modules/boltz-core/hardhat.config.ts before deploying contracts 
+//   ... copy it over to node_modules/boltz-core/hardhat.config.ts before deploying contracts
 
 //import fs from 'fs';
 import 'hardhat-gas-reporter';
@@ -47,10 +47,10 @@ const config: HardhatUserConfig = {
 //if (mnemonics && infuraKey) {
   config.networks = {
     localhost: {
-        accounts: "remote",
-        url: `http://127.0.0.1:4444`,
+        accounts: 'remote',
+        url: 'http://127.0.0.1:4444',
         chainId: 33,
-       },   
+       },
   };
 //}
 

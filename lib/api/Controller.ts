@@ -176,7 +176,7 @@ class Controller {
 
     this.successResponse(res, mapToObject(feeEstimation));
   };
-  
+
   public getInfo = async (_: Request, res: Response): Promise<void> => {
     const info = await this.service.getInfo();
 
@@ -187,7 +187,7 @@ class Controller {
     try {
 
       const response:any[] = [];
-      
+
       this.pendingSwapInfos.forEach((value,key:string)=>{
         response.push({...value, key});
       });
@@ -195,13 +195,13 @@ class Controller {
       if (response) {
         this.successResponse(res, response);
       } else {
-        this.errorResponse(req, res, `could not find swaps`, 404);
+        this.errorResponse(req, res, 'could not find swaps', 404);
       }
     } catch (error) {
       this.errorResponse(req, res, error);
     }
   };
-  
+
   // POST requests
   public routingHints = (req: Request, res: Response): void => {
     try {
