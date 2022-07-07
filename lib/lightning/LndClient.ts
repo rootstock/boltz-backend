@@ -150,7 +150,7 @@ class LndClient extends BaseClient implements LndClient {
         return false;
       }
     }
-    this.logger.verbose(`LndClient Connected.`);
+    this.logger.verbose('LndClient Connected.');
     return true;
   };
 
@@ -222,7 +222,7 @@ class LndClient extends BaseClient implements LndClient {
   };
 
   private unaryCall = <T, U>(client: any, methodName: string, params: T): Promise<U> => {
-    
+
     return new Promise((resolve, reject) => {
       (client[methodName] as LndMethodFunction)(params, this.meta, (err: ServiceError, response: GrpcResponse) => {
         if (err) {
@@ -614,7 +614,7 @@ class LndClient extends BaseClient implements LndClient {
 
     invoiceSubscription
       .on('data', (invoice: lndrpc.Invoice) => {
-        this.logger.debug(`InvoiceSubscription received`);
+        this.logger.debug('InvoiceSubscription received');
         if (invoice.getState() === lndrpc.Invoice.InvoiceState.ACCEPTED) {
           this.logger.debug(`${LndClient.serviceName} ${this.symbol} accepted ${invoice.getHtlcsList().length} HTLC${invoice.getHtlcsList().length > 1 ? 's' : ''} for invoice: ${invoice.getPaymentRequest()}`);
 
@@ -657,7 +657,7 @@ class LndClient extends BaseClient implements LndClient {
         }
       })
       .on('error', async (error) => {
-        this.logger.error(`Peer event error.`);
+        this.logger.error('Peer event error.');
         await this.handleSubscriptionError('peer event', error);
       });
   };

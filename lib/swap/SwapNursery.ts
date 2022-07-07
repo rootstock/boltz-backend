@@ -551,7 +551,7 @@ class SwapNursery extends EventEmitter {
         contractTransaction.hash,
       );
     } catch (error) {
-      this.logger.error(`Error when lockupEther : ${JSON.stringify(error)}`)
+      this.logger.error(`Error when lockupEther : ${JSON.stringify(error)}`);
       await this.handleReverseSwapSendFailed(reverseSwap, wallet.symbol, lndClient, error);
     }
   };

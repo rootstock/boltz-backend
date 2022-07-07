@@ -27,9 +27,9 @@ class ContractHandler {
     timeLock: number,
   ): Promise<ContractTransaction> => {
     this.logger.debug(`Locking ${amount} Ether with preimage hash: ${getHexString(preimageHash)} , claimAddress: ${claimAddress}, timelock: ${timeLock}`);
-    
+
     //TODO : fix these gas issues
-    let txParams = {
+    const txParams = {
       value: amount,
       ...await getGasPrices(this.etherSwap.provider),
     };

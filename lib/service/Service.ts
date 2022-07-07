@@ -909,7 +909,7 @@ class Service {
 
     // Not the pretties way and also not the right spot to do input validation but
     // only at this point in time the type of the sending currency is known
-    this.logger.verbose(`Checking parameters depending on type: ${sendingCurrency.type}`)
+    this.logger.verbose(`Checking parameters depending on type: ${sendingCurrency.type}`);
     switch (sendingCurrency.type) {
       case CurrencyType.BitcoinLike:
         if (args.claimPublicKey === undefined) {

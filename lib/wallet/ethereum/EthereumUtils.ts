@@ -17,6 +17,6 @@ export const getGasPrices = async (provider: providers.Provider): Promise<Overri
     //maxFeePerGas: feeData.maxFeePerGas!,
     //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
      gasPrice: BigNumber.from(1),//feeData.gasPrice!,
-     gasLimit: "0xac890",
+     gasLimit: '0xac890',
   };
 };

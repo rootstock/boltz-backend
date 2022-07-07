@@ -48,13 +48,13 @@ describe('EtherWalletProvider', () => {
     expect(balance).toEqual(sentInTransaction);
 
     const signNewBal = await signer.getBalance(); //this should be 0 in non eip-1559 case
-    
+
     if (receipt.effectiveGasPrice){ //this will be undefined for rskj (no eip-1559)
       const expectedDust = (transaction.gasPrice!.sub(receipt.effectiveGasPrice)).mul(receipt.gasUsed);
-      expect((signNewBal).toString()).toEqual(expectedDust.toString());  
+      expect((signNewBal).toString()).toEqual(expectedDust.toString());
     } else {
       expect(signNewBal).toEqual(BigNumber.from(0)); // there shouldn't be any dust in rsk sweep (no 1559)
-    };
+    }
 
   });
 

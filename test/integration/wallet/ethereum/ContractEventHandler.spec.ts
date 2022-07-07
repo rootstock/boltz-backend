@@ -175,7 +175,7 @@ describe('ContractEventHandler', () => {
     etherSwapTransactionHashes.lockup = lockupTransaction.hash;
 
     await lockupTransaction.wait(1);
-    console.log('check event emit'); 
+    console.log('check event emit');
     await waitForFunctionToBeTrue(() => {
       return eventsEmitted === 1;
     });
@@ -189,7 +189,7 @@ describe('ContractEventHandler', () => {
       etherSwapValues.timelock,
       {
         gasPrice: 1,
-        gasLimit: "0xac890",
+        gasLimit: '0xac890',
       }
     );
     etherSwapTransactionHashes.claim = claimTransaction.hash;
@@ -215,7 +215,7 @@ describe('ContractEventHandler', () => {
       etherSwapValues.timelock,
       {
         gasPrice: 1,
-        gasLimit: "0xac890",
+        gasLimit: '0xac890',
       }
     );
     etherSwapTransactionHashes.refund = refundTransaction.hash;
