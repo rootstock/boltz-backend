@@ -4,11 +4,13 @@
 * Running setup in `regtest` mode. 
 * Several TODO issues to work on.
 
-## Setup for Ubuntu (e.g. Boton)
+## Setup for Ubuntu
 
-Clone the repo and check out `rsk_integration`. Tested on ubuntu (20.04 LTS).
+Tested on Ubuntu 18.04 and 20.04
 
-### Install Docker
+Clone the repo and check out `rsk_integration`
+
+### docker
 
 ```
 sudo apt install -y docker docker-compose
@@ -19,7 +21,7 @@ optionally add user to docker group or add `sudo` to the docker commands in `pac
 sudo usermod -aG docker $USER # exit shell and login again
 ```
 
-### Make and gcc
+### make and gcc
 ```
 sudo apt-get install -y gcc g++ make rsync
 ```
@@ -36,26 +38,48 @@ source ~/.bashrc
 nvm --version
 nvm install 16
 ```
+### python
+Python3 is used with `dataclasses` to build docker images.
+
+For example on ubuntu
+```
+sudo apt install -y python3 python3-pip
+```
+install dataclasses
+
+```
+python3 -m pip install dataclasses
+```
 
 ## Set up regtest environment
 
-Move into project directory and install dependencies
+Move into project directory (clone repo and checkout dev branch if not already done)
 ```
-cd boltz*
+git clone https://github.com/rootstock/boltz-backend.git
+cd boltz-backend
+git checkout rsk_integration 
+```
 
-npm install
+install dependencies and build docker images
+```
+npm install --build-from-resource
 npm run compile
-npm run docker:regtest:build
+./build_regtest.sh
 ```
 
-Then can start and stop regtest deployment as follows
+Overwrite the hardhat config in `boltz-core` with RSK port
+```
+cp ./hardhat.config.ts node_modules/boltz-core/hardhat.config.ts
+```
+
+Deploy containers and fund accounts
 
 ```
 #start
 npm run docker:start
-
-#stop
-npm run docker:stop
+npm run docker:rskj:fundAcc
+npm run docker:rskj:fund1
+npm link
 ```
 
 ## Start backend server
@@ -68,33 +92,98 @@ npm start
 npm run dev
 ```
 
+### Initial server errors
+If there are errors like  "*Error: the sender account doesn't exist*" or 
+"*error: Could not initialize Boltz: Validation error*", they can be resoved as follows.
 
-## Integration tests
+Stop and remove all containers
+```
+npm run docker:stop
+```
+
+Clean any existing Boltz DB 
+```
+rm /Users/<username>/Library/Application\ Support/Boltz/boltz.db #on mac
+rm $HOME/.boltz/boltz.db # on linux
+```
+or run `./clean.sh`
+
+restart containers, fund accounts, and then try starting the backend server again
+```
+npm run docker:start
+npm run docker:rskj:fundAcc
+npm run docker:rskj:fund1
+npm start
+```
+### Thunderhub 
+[Thunderhub](https://docs.thunderhub.io/) is a lightning node manager
 
 ```
-docker exec -it rskj bash # edit node.conf 
+# e.g. from home directory
+git clone https://github.com/apotdevin/thunderhub.git
+cd thunderhub
 ```
 
-Restart the rskj container for changes to take effect.
+Create an `accounts.yaml` file, modify (or create if needed) environment file `.env`, and **start the app** following instructions in [README_ThunderHub.md](./README_ThunderHub.md)
+
+### Postman
+The postman environment and collections are in the `postman` directory. The relevant fields (e.g. *preimagehash*-es, addresses, etc) **must be changed appropriately** in the collection prior to making calls.
+
+
+## Workflow for swaps
+From the `boltz-backend` directory
+
+### Reverse submarine swap
+
+- Create a *preimage*
+    - `boltz-cli newpreimage`
+    - this returns 2 fields: *preimage* and *preimageHash*
+- Create a *reverse swap*
+    - look for `createswap` post in Postman
+    - replace `preimageHash` with the previously generated **preimageHash**
+    - and replace the rest of the fields if necessary (address for instance)
+- Pay the *invoice*
+    - The previous step returned a hash of an invoice (”invoice” field)
+    - Take any LN client and pay it (e.g. using Thunderhub)
+- *Claim* the RBTC on RSK chain using the original preimage
+    - `boltz-ethereum-cli claim <**preimage**>`
+    - where <preimage> is the one generated in the first step.
+- More info: [https://docs.boltz.exchange/en/latest/lifecycle/#reverse-submarine-swaps](https://docs.boltz.exchange/en/latest/lifecycle/#reverse-submarine-swaps)
+
+
+## Additional info: Developing on remote systems
+
+### A CLI for postman
+An alternative to using postman app is to use postman's [newman cli](https://www.postman.com/downloads/). This can be useful on remote systems and for CI and automated testing.
 
 ```
-docker restart rskj # this will restart/reset the RSK node
+npm install -g newman
 ```
-and redploy the contracts
+
+We can then run collections using newman from the command line. 
+
 ```
-npm run docker:rskj:deploy
+# Boltz Backend
+newman run -e "postman/LND.postman_environment.json" --verbose "postman/Boltz Backend.postman_collection.json"
+
+# RSK Node
+newman run -e "postman/LND.postman_environment.json" --verbose "postman/RSK Node.postman_collection.json"
 ```
-Then use `npm run tests:int` to run (and identify failing) integration tests
 
-The config changes (e.g. for min gasPrice) are lost when the containers are removed (e.g. through `npm run docker:stop`).
+#### port forwarding
+When developing or testing on remote systems, we can forward the following ports to interact with the services, like so
 
-An alternative is to modify the wallet scripts to explicitly pass `gasPrice` of at least 1.
+```
+ssh -L 4444:127.0.0.1:4444   \ # rskj (via postman)
+    -L 3000:127.0.0.1:3000   \ # thunderhub (via browser)
+    -L 9001:127.0.0.1:9001   \ # Boltz (via postman)
+    #-L 10009:127.0.0.1:10009 \ # LND (optional via postman), or just use thunderhub
+    user@remote       #modify as per actual remote```
+```
 
-## Deployment
+## Running tests
 
-I created a config file `config.toml` for running the backend. The settings are from `docs/regtest.md`. Note that deployment config will be different. 
-For regtest environment, the 3 addresses of the 3 deployed contracts (`EtherSwap`, `ERC20Swap` and the `ERC20Token`) are added. These addresses are reproducible for a given private key + fresh deployment.
-
+See `package.json` for test options. For example, use `npm run tests:int` to run integration tests
 
 ## Errors
 
@@ -108,17 +197,19 @@ reason: 'processing response error',
 ```
 Fix #1: (fund account)
 ```
-    "docker:rskj:fundAcc": "./bin/boltz-ethereum send 1000 '0xdebe71e1de41fc77c44df4b6db940026e31b0e71' && ./bin/boltz-ethereum send 1000 '0xdebe71e1de41fc77c44df4b6db940026e31b0e71' --token && ./bin/boltz-ethereum send 1000 '0xaa73dfb3a60fDb7093892E4cc883160e13E67b31' --token && ./bin/boltz-ethereum send 1000 '0xaa73dfb3a60fDb7093892E4cc883160e13E67b31'",
+""
+npm run docker:rskj:fundAcc
+npm run docker:rskj:fund1
 ```
 
 Fix #2 (check mnemonic file):
 
 `~/Library/Application\ Support/Boltz/seed.dat`
 
-> Every time you work with a fresh copy, a new seed is autogenerated and saved in that file. 
+Every time you work with a fresh copy, a new seed is autogenerated and saved in that file. 
 So if you look at the desc of `docker:rskj:fund1` for instance, you will see an address that corresponds to the seed autogenerated. 
 So probably the address there should be changed in a fresh copy (derived from the seed file), thats my theory, didn’t try it yet. Among the logs there should be a transaction with error, the `to` field of that transaction should be the new address.
->
+
 
 ### Error:
 ```
@@ -138,11 +229,13 @@ name: 'SequelizeUniqueConstraintError',
     }
   ],
 ```
+
 Clean DB 
 ```
-rm /Users/<username>/Library/Application\ Support/Boltz/boltz.db
+rm /Users/<username>/Library/Application\ Support/Boltz/boltz.db #on mac
+rm $HOME/.boltz/boltz.db # on linux
 ```
-
+or run `./clean.sh`
 
 ### Error:
 When running node v16, I get this:
