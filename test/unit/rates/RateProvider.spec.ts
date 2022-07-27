@@ -7,6 +7,7 @@ import PairRepository from '../../../lib/db/repositories/PairRepository';
 import { Currency } from '../../../lib/wallet/WalletManager';
 import DataAggregator from '../../../lib/rates/data/DataAggregator';
 import FeeProvider, { MinerFees } from '../../../lib/rates/FeeProvider';
+import { ETHER_SYMBOL } from '../../../lib/consts/Consts';
 
 FeeProvider.transactionSizes = {
   normalClaim: 170,
@@ -221,7 +222,7 @@ describe('RateProvider', () => {
 
   test('should accept 0-conf for amounts lower than threshold', () => {
     // Should return false for undefined maximal allowed amounts
-    expect(rateProvider.acceptZeroConf('ETH', 0)).toEqual(false);
+    expect(rateProvider.acceptZeroConf(ETHER_SYMBOL, 0)).toEqual(false);
 
     expect(rateProvider.acceptZeroConf('BTC', btcCurrency.limits.maxZeroConfAmount! + 1)).toEqual(false);
 

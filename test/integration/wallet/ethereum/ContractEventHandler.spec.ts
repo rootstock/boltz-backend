@@ -168,20 +168,19 @@ describe('ContractEventHandler', () => {
     registerEtherSwapListeners();
 
     // Lockup
-    console.log('start lockup');
     let lockupTransaction = await etherSwap.lock(preimageHash, etherSwapValues.claimAddress, etherSwapValues.timelock, {
       value: etherSwapValues.amount,
+        gasPrice: 1,
+        gasLimit: "0xac890"
     });
     etherSwapTransactionHashes.lockup = lockupTransaction.hash;
 
     await lockupTransaction.wait(1);
-    console.log('check event emit'); 
     await waitForFunctionToBeTrue(() => {
       return eventsEmitted === 1;
     });
 
     // Claim
-    console.log('start claim');
     const claimTransaction = await etherSwap.connect(etherBase).claim(
       preimage,
       etherSwapValues.amount,
@@ -195,13 +194,11 @@ describe('ContractEventHandler', () => {
     etherSwapTransactionHashes.claim = claimTransaction.hash;
 
     await claimTransaction.wait(1);
-    console.log('check claim emit');
     await waitForFunctionToBeTrue(() => {
       return eventsEmitted === 2;
     });
 
     // Refund
-    console.log('start refund');
     lockupTransaction = await etherSwap.lock(preimageHash, etherSwapValues.claimAddress, etherSwapValues.timelock, {
       value: etherSwapValues.amount,
     });
@@ -221,7 +218,6 @@ describe('ContractEventHandler', () => {
     etherSwapTransactionHashes.refund = refundTransaction.hash;
 
     await refundTransaction.wait(1);
-    console.log('wait refund emit');
     await waitForFunctionToBeTrue(() => {
       return eventsEmitted === 3;
     });
