@@ -4,8 +4,8 @@ import { OutputType } from 'boltz-core';
 export const ReverseSwapOutputType = OutputType.Bech32;
 
 // Decimals from WEI to 10 ** -8
-// TODO : fix this workaround with proper decimal calculation btw BTC and rBTC.
-export const etherDecimals = BigNumber.from(1); //BigNumber.from(10).pow(BigNumber.from(10));
+// Decimal calculation btw WEIs and SATs.
+export const etherDecimals = BigNumber.from(10).pow(BigNumber.from(10));
 
 // Symbol of the etherlike chain
 export const ETHER_SYMBOL = "rBTC";

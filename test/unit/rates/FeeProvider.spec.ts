@@ -2,6 +2,7 @@ import Logger from '../../../lib/Logger';
 import FeeProvider from '../../../lib/rates/FeeProvider';
 import { BaseFeeType, OrderSide } from '../../../lib/consts/Enums';
 import DataAggregator from '../../../lib/rates/data/DataAggregator';
+import { ETHER_SYMBOL } from '../../../lib/consts/Consts';
 
 const btcFee = 36;
 const ltcFee = 3;
@@ -11,14 +12,14 @@ const getFeeEstimation = async () => {
   return new Map([
     ['BTC', btcFee],
     ['LTC', ltcFee],
-    ['ETH', ethFee],
+    [ETHER_SYMBOL, ethFee],
   ]);
 };
 
 jest.mock('../../../lib/rates/data/DataAggregator', () => {
   return jest.fn().mockImplementation(() => ({
     latestRates: new Map<string, number>([
-      ['ETH/USDT', 2],
+      ['rBTC/USDT', 2],
     ]),
   }));
 });
@@ -66,7 +67,7 @@ describe('FeeProvider', () => {
 
     await feeProvider.updateMinerFees('BTC');
     await feeProvider.updateMinerFees('LTC');
-    await feeProvider.updateMinerFees('ETH');
+    await feeProvider.updateMinerFees(ETHER_SYMBOL);
     await feeProvider.updateMinerFees('USDT');
 
     expect(feeProvider.minerFees.size).toEqual(4);
@@ -89,7 +90,7 @@ describe('FeeProvider', () => {
       },
     });
 
-    expect(feeProvider.minerFees.get('ETH')).toEqual({
+    expect(feeProvider.minerFees.get(ETHER_SYMBOL)).toEqual({
       normal: 27416,
       reverse: {
         claim: 27416,
