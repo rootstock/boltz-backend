@@ -173,7 +173,36 @@ fix: https://github.com/microsoft/TypeScript/issues/49257
 npm install typescript@latest ts-node@latest
 ```
 
+### Error:
+- When running `npm run docker:regtest:build`
 
+```
+ => => # verify candidate authority certificate \"buildk
+ => => # itsandbox\")"
+ => => # [lncli] rpc error: code = Unknown desc = pubkey
+ => => #  string is empty
+ => => # [lncli] unable to decode node public key: encod
+ => => # ing/hex: invalid byte: U+002D '-'
+```
+
+Fix: regenerate lnd certs ( `docker/regtest/data/certificates/` files)
+- comment the following lines in `docker/regtest/Dockerfile`:
+
+```
+# Copy certificates for the LNDs
+COPY regtest/data/lnd/certificates /root/.lnd-btc/
+COPY regtest/data/lnd/certificates /root/.lnd-btc2/
+```
+
+- add the following lines after `RUN bash setup.sh`
+
+```
+RUN cat /root/.lnd-btc/tls.key
+RUN cat /root/.lnd-btc/tls.crt
+```
+
+- Run the build again, check the logs, it should appear both files.
+- Replace the content, and revert the changes made to `docker/regtest/Dockerfile`.
 
 # Original Boltz documentation
 
