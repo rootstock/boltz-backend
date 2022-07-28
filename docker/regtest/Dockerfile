@@ -61,8 +61,8 @@ COPY regtest/data/lnd/lnd.conf /root/.lnd-ltc2/
 COPY regtest/data/lnd/certificates /root/.lnd-btc/
 COPY regtest/data/lnd/certificates /root/.lnd-btc2/
 
-COPY regtest/data/lnd/certificates /root/.lnd-ltc/
-COPY regtest/data/lnd/certificates /root/.lnd-ltc2/
+# COPY regtest/data/lnd/certificates /root/.lnd-ltc/
+# COPY regtest/data/lnd/certificates /root/.lnd-ltc2/
 
 # Copy macaroons for the LNDs
 COPY regtest/data/lnd/macaroons /root/.lnd-btc/data/chain/bitcoin/regtest/
