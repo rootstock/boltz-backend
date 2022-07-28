@@ -1,4 +1,4 @@
-import { Overrides, providers } from 'ethers';
+import { Overrides, providers, BigNumber } from 'ethers';
 import { getHexBuffer } from '../../Utils';
 
 /**
@@ -10,10 +10,12 @@ export const parseBuffer = (input: string): Buffer => {
 
 export const getGasPrices = async (provider: providers.Provider): Promise<Overrides> => {
   const feeData = await provider.getFeeData();
-
   return {
-    type: 2,
-    maxFeePerGas: feeData.maxFeePerGas!,
-    maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+    // TODO : please fix this, this could be the root of gas price issues
+    //type: 2,
+    //maxFeePerGas: feeData.maxFeePerGas!,
+    //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+     gasPrice: feeData.gasPrice?.gt(1) ? feeData.gasPrice : BigNumber.from(2),//,
+     gasLimit: "0x222E0",
   };
 };

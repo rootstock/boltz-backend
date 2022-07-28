@@ -1,0 +1,12 @@
+version: "3"
+services:
+  rskj:
+    build:
+      context: "."
+    container_name: rsk-node
+    image: rskj:latest
+    command: --regtest
+    ports:
+      - "127.0.0.1:4444:4444"
+    volumes:
+      - ./database:/root/.rsk/regtest/database

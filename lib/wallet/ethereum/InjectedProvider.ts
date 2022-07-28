@@ -9,7 +9,8 @@ import PendingEthereumTransactionRepository from '../../db/repositories/PendingE
 enum EthProviderService {
   Infura = 'Infura',
   Alchemy = 'Alchemy',
-  Websocket = 'WebSocket'
+  //Websocket = 'WebSocket',
+  Http = 'Http', //switching to http for initial RSK port
 }
 
 /**
@@ -19,7 +20,7 @@ enum EthProviderService {
 class InjectedProvider implements providers.Provider {
   public _isProvider = true;
 
-  private providers = new Map<string, providers.WebSocketProvider>();
+  private providers = new Map<string, providers.JsonRpcProvider>();
   private pendingEthereumTransactionRepository = new PendingEthereumTransactionRepository();
 
   private network!: providers.Network;
@@ -28,10 +29,10 @@ class InjectedProvider implements providers.Provider {
 
   constructor(private logger: Logger, config: EthereumConfig) {
     if (config.providerEndpoint) {
-      this.providers.set(EthProviderService.Websocket, new providers.WebSocketProvider(config.providerEndpoint));
-      this.logAddedProvider(EthProviderService.Websocket, { endpoint: config.providerEndpoint });
+      this.providers.set(EthProviderService.Http, new providers.JsonRpcProvider(config.providerEndpoint));
+      this.logAddedProvider(EthProviderService.Http, { endpoint: config.providerEndpoint });
     } else {
-      this.logDisabledProvider(EthProviderService.Websocket, 'no endpoint was specified');
+      this.logDisabledProvider(EthProviderService.Http, 'no endpoint was specified');
     }
 
     const addEthProvider = (name: EthProviderService, providerConfig: EthProviderServiceConfig) => {
@@ -46,20 +47,21 @@ class InjectedProvider implements providers.Provider {
       }
 
       switch (name) {
+	/*
         case EthProviderService.Infura:
-          this.providers.set(name, new providers.InfuraWebSocketProvider(
+          this.providers.set(name, new providers.InfuraJsonRpcProvider(
             providerConfig.network,
             providerConfig.apiKey,
           ));
           break;
 
         case EthProviderService.Alchemy:
-          this.providers.set(name, new providers.AlchemyWebSocketProvider(
+          this.providers.set(name, new providers.AlchemyJsonRpcProvider(
             providerConfig.network,
             providerConfig.apiKey,
           ));
           break;
-
+         */
         default:
           this.logDisabledProvider(name, 'provider not supported');
           return;
@@ -102,11 +104,13 @@ class InjectedProvider implements providers.Provider {
     this.logger.info(`Connected to ${this.providers.size} Web3 providers:\n - ${Array.from(this.providers.keys()).join('\n - ')}`);
   };
 
+  //destroy only for websocket
+ /*
   public destroy = async (): Promise<void> => {
     for (const provider of this.providers.values()) {
       await provider.destroy();
     }
-  };
+  };*/
 
   /*
    * Method calls
@@ -390,3 +394,4 @@ class InjectedProvider implements providers.Provider {
 }
 
 export default InjectedProvider;
+

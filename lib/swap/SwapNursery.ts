@@ -536,6 +536,7 @@ class SwapNursery extends EventEmitter {
           reverseSwap.timeoutBlockHeight,
         );
       }
+      this.logger.verbose(`Locked up tx: ${contractTransaction.hash} `);
 
       this.ethereumNursery!.listenContractTransaction(reverseSwap, contractTransaction);
       this.logger.verbose(`Locked up ${reverseSwap.onchainAmount} Ether for Reverse Swap ${reverseSwap.id}: ${contractTransaction.hash}`);
@@ -550,6 +551,7 @@ class SwapNursery extends EventEmitter {
         contractTransaction.hash,
       );
     } catch (error) {
+      this.logger.error(`Error when lockupEther : ${JSON.stringify(error)}`)
       await this.handleReverseSwapSendFailed(reverseSwap, wallet.symbol, lndClient, error);
     }
   };

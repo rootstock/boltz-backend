@@ -1,4 +1,5 @@
 import Logger from '../Logger';
+import { ETHER_SYMBOL } from '../consts/Consts';
 import Swap from '../db/models/Swap';
 import Service from '../service/Service';
 import DiscordClient from './DiscordClient';
@@ -170,7 +171,7 @@ class NotificationProvider {
 
     const getMinerFeeSymbol = (symbol: string) => {
       if (this.service.currencies.get(symbol)!.type === CurrencyType.ERC20) {
-        return 'ETH';
+        return ETHER_SYMBOL;
       } else {
         return symbol;
       }

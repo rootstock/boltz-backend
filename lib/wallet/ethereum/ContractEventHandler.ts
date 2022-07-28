@@ -113,7 +113,7 @@ class ContractEventHandler extends EventEmitter {
   };
 
   private subscribeContractEvents = () => {
-    this.etherSwap.on('Lockup', async (
+    this.etherSwap.on('Lockup', (
       preimageHash: string,
       amount: BigNumber,
       claimAddress: string,
@@ -142,7 +142,7 @@ class ContractEventHandler extends EventEmitter {
       this.emit('eth.refund', event.transactionHash, parseBuffer(preimageHash));
     });
 
-    this.erc20Swap.on('Lockup', async (
+    this.erc20Swap.on('Lockup', (
       preimageHash: string,
       amount: BigNumber,
       tokenAddress: string,

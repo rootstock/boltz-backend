@@ -1,0 +1,634 @@
+{
+	"info": {
+		"_postman_id": "a939e55a-50ee-4380-be5e-b5577d519f8a",
+		"name": "RSK Node",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21285564"
+	},
+	"item": [
+		{
+			"name": "eth_blockNumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_blockNumber\",\n    \"params\": [],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "debug_traceTransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"id\": 3615207268,\n    \"method\": \"debug_traceTransaction\",\n    \"params\": [\n        \"0x3f0c215881f2cc244f599108758d54d943f614b0a4326838fc3e6297e249dd24\",\n        {\n            \"disableStorage\": true,\n            \"disableMemory\": false,\n            \"disableStack\": false,\n            \"fullStorage\": false\n        }\n    ],\n    \"origin\": \"http://remix.ethereum.org\",\n    \"tabId\": 743\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_getBlockByNumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_getBlockByNumber\",\n    \"params\": [\"0x0\", false],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_getBlockByNumber latest",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_getBlockByNumber\",\n    \"params\": [\"latest\"],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_accounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_accounts\",\n    \"params\": [],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "personal_newAccountWithSeed",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"personal_newAccountWithSeed\",\n    \"params\": [\"office shallow practice favorite diary review floor quote faith initial foot squeeze\"],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "net_version",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"net_version\",\n    \"params\": [],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_gasPrice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_gasPrice\",\n    \"params\": [],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_getCode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_getCode\",\n    \"params\": [\n        \"0x909E433c507A398a5405677B5b2767a3f523F73b\",\n        \"latest\"\n    ],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4444/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4444",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_sign",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_sign\",\n    \"params\": [\n        \"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826\",\n        \"0x307843443261336439463933384531334344393437456330354162433746453733344466384444383236\"\n    ],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_getBalance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_getBalance\",\n    \"params\": [\n        \"0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826\",\n        \"latest\"\n    ],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4444/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4444",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_getStorageAt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_getStorageAt\",\n    \"params\": [\n        \"0x911F77160b2d4f929CD22De8EAa586b8761F1859\",\n        \"0x0\", \n        \"latest\"\n    ],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:4444/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "4444",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_getTransactionReceipt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"eth_getTransactionReceipt\",\n    \"params\": [\n        \"0x7a6c7e7ea68f3c4f405fff9c452b2f0ab96b034f67b651cb4da625dbcff42d20\"\n    ],\n    \"id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_call",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"eth_call\",\n    \"params\": [\n        {\n            \"gas\": \"0xacc0\",\n            \"from\": \"0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826\",\n            \"to\": \"0x77045e71a7a2c50903d88e564cd72fab11e82051\",\n            \"data\": \"0xc3c37fbc6be37d8a7e540271bcad3de6a53b9ec3dafd115997ab6576a841d370376618e300000000000000000000000000000000000000000000000000000000000007c6000000000000000000000000abf0e4a3ab8628cac2d0539679233b607c3c6f420000000000000000000000000000000000000000000000000000000000001699\"\n        },\"latest\"\n    ],\n    \"id\": 60,\n    \"jsonrpc\": \"2.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "eth_sendTransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"eth_sendTransaction\",\n    \"params\": [\n        {\n            \"gas\": \"0xacc00\",\n            \"from\": \"0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826\",\n            \"to\": \"0x77045e71a7a2c50903d88e564cd72fab11e82051\",\n            \"data\": \"0xc3c37fbc6be37d8a7e540271bcad3de6a53b9ec3dafd115997ab6576a841d370376618e300000000000000000000000000000000000000000000000000000000000007c6000000000000000000000000abf0e4a3ab8628cac2d0539679233b607c3c6f420000000000000000000000000000000000000000000000000000000000001699\"\n        }\n    ],\n    \"id\": 60,\n    \"jsonrpc\": \"2.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NODE}}",
+					"host": [
+						"{{NODE}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
