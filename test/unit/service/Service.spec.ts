@@ -22,7 +22,7 @@ import { decodeInvoice, getHexBuffer, getHexString } from '../../../lib/Utils';
 import ReferralRepository from '../../../lib/db/repositories/ReferralRepository';
 import ReverseSwapRepository from '../../../lib/db/repositories/ReverseSwapRepository';
 import ChannelCreationRepository from '../../../lib/db/repositories/ChannelCreationRepository';
-import { etherDecimals, ethereumPrepayMinerFeeGasLimit, gweiDecimals } from '../../../lib/consts/Consts';
+import { etherDecimals, ethereumPrepayMinerFeeGasLimit, gweiDecimals, ETHER_SYMBOL } from '../../../lib/consts/Consts';
 import {
   BaseFeeType,
   CurrencyType,
@@ -218,7 +218,7 @@ jest.mock('../../../lib/wallet/WalletManager', () => {
           unconfirmedBalance: 0,
         }),
       } as any as Wallet],
-      ['ETH', {
+      [ETHER_SYMBOL, {
         getAddress: mockGetEthereumAddress,
         sweepWallet: mockSweepEther,
         sendToAddress: mockSendEther,
@@ -293,7 +293,7 @@ const pairs = new Map<string, any>([
     },
     hash: 'hashOfLtcBtcPair',
   }],
-  ['ETH/BTC', {
+  ['rBTC/BTC', {
     rate: 0.041,
     limits: {
       minimal: 1,
@@ -431,7 +431,7 @@ describe('Service', () => {
       timeoutDelta: 400,
     },
     {
-      base: 'ETH',
+      base: ETHER_SYMBOL,
       quote: 'BTC',
       fee: 2,
       timeoutDelta: 180,
@@ -455,8 +455,8 @@ describe('Service', () => {
       lndClient: mockedLndClient(),
       chainClient: mockedChainClient(),
     }],
-    ['ETH', {
-      symbol: 'ETH',
+    [ETHER_SYMBOL, {
+      symbol: ETHER_SYMBOL,
       type: CurrencyType.Ether,
       limits: {} as any,
       provider: mockedProvider(),
@@ -514,7 +514,7 @@ describe('Service', () => {
       ...configPairs[1],
     });
     expect(mockAddPair).toHaveBeenCalledWith({
-      id: 'ETH/BTC',
+      id: 'rBTC/BTC',
       ...configPairs[2],
     });
 
@@ -569,7 +569,7 @@ describe('Service', () => {
       lightningBalance: channelBalance,
     });
 
-    expect(balances.get('ETH').toObject()).toEqual({
+    expect(balances.get(ETHER_SYMBOL).toObject()).toEqual({
       walletBalance: {
         unconfirmedBalance: 0,
         totalBalance: etherBalance,
@@ -765,7 +765,7 @@ describe('Service', () => {
 
     expect(mockGetAddress).toHaveBeenCalledTimes(1);
 
-    expect(await service.getAddress('ETH')).toEqual(ethereumAddress);
+    expect(await service.getAddress(ETHER_SYMBOL)).toEqual(ethereumAddress);
     expect(await service.getAddress('TRC')).toEqual(ethereumAddress);
 
     // Throw if currency cannot be found
@@ -782,7 +782,7 @@ describe('Service', () => {
     expect(feeEstimation).toEqual(new Map<string, number>([
       ['BTC', 2],
       ['LTC', 2],
-      ['ETH', mockGetGasPriceResult],
+      [ETHER_SYMBOL, mockGetGasPriceResult],
     ]));
 
     expect(mockEstimateFee).toHaveBeenCalledTimes(2);
@@ -808,7 +808,7 @@ describe('Service', () => {
 
     // Get fee estimation for an ERC20 token
     expect(await service.getFeeEstimation('USDT')).toEqual(new Map<string, number>([
-      ['ETH', mockGetGasPriceResult],
+      [ETHER_SYMBOL, mockGetGasPriceResult],
     ]));
 
     expect(mockGetGasPrice).toHaveBeenCalledTimes(2);
@@ -1436,7 +1436,7 @@ describe('Service', () => {
 
   test('should create Reverse Swaps with Ethereum prepay miner fee', async () => {
     const args = {
-      pairId: 'ETH/BTC',
+      pairId: 'rBTC/BTC',
       orderSide: 'buy',
       prepayMinerFee: true,
       invoiceAmount: 100000,
@@ -1465,7 +1465,7 @@ describe('Service', () => {
     });
 
     expect(mockCalculateRate).toHaveBeenCalledTimes(1);
-    expect(mockCalculateRate).toHaveBeenCalledWith('ETH', 'BTC');
+    expect(mockCalculateRate).toHaveBeenCalledWith(ETHER_SYMBOL, 'BTC');
 
     expect(mockCreateReverseSwap).toHaveBeenCalledTimes(1);
     expect(mockCreateReverseSwap).toHaveBeenCalledWith({
@@ -1473,7 +1473,7 @@ describe('Service', () => {
       percentageFee,
       prepayMinerFeeOnchainAmount,
       prepayMinerFeeInvoiceAmount,
-      baseCurrency: 'ETH',
+      baseCurrency: ETHER_SYMBOL,
       quoteCurrency: 'BTC',
       orderSide: OrderSide.BUY,
       onchainTimeoutBlockDelta: 720,
@@ -1493,7 +1493,7 @@ describe('Service', () => {
 
   test('should create Reverse Swaps with Ethereum prepay miner fee and specified onchain amount', async () => {
     const args = {
-      pairId: 'ETH/BTC',
+      pairId: 'rBTC/BTC',
       orderSide: 'buy',
       prepayMinerFee: true,
       onchainAmount: 3200000000,
@@ -1512,7 +1512,7 @@ describe('Service', () => {
     expect(mockCreateReverseSwap).toHaveBeenCalledWith({
       prepayMinerFeeOnchainAmount,
       prepayMinerFeeInvoiceAmount,
-      baseCurrency: 'ETH',
+      baseCurrency: ETHER_SYMBOL,
       quoteCurrency: 'BTC',
       orderSide: OrderSide.BUY,
       claimAddress: args.claimAddress,
@@ -1591,7 +1591,7 @@ describe('Service', () => {
   test('should send Ether', async () => {
     const fee = 3;
     const amount = 2;
-    const symbol = 'ETH';
+    const symbol = ETHER_SYMBOL;
     const address = '0x0000000000000000000000000000000000000000';
 
     let sendAll = false;

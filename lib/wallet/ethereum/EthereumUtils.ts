@@ -10,13 +10,12 @@ export const parseBuffer = (input: string): Buffer => {
 
 export const getGasPrices = async (provider: providers.Provider): Promise<Overrides> => {
   const feeData = await provider.getFeeData();
-  console.log('feeData', feeData);
   return {
     // TODO : please fix this, this could be the root of gas price issues
     //type: 2,
     //maxFeePerGas: feeData.maxFeePerGas!,
     //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
-     gasPrice: BigNumber.from(1),//feeData.gasPrice!,
-     gasLimit: "0xac890",
+     gasPrice: feeData.gasPrice?.gt(1) ? feeData.gasPrice : BigNumber.from(2),//,
+     gasLimit: "0x222E0",
   };
 };

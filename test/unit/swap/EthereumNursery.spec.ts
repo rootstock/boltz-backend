@@ -15,6 +15,7 @@ import { ERC20SwapValues, EtherSwapValues } from '../../../lib/consts/Types';
 import EtherWalletProvider from '../../../lib/wallet/providers/EtherWalletProvider';
 import ERC20WalletProvider from '../../../lib/wallet/providers/ERC20WalletProvider';
 import { CurrencyType, OrderSide, SwapUpdateEvent } from '../../../lib/consts/Enums';
+import { ETHER_SYMBOL } from '../../../lib/consts/Consts';
 
 type blockCallback = (height: number) => void;
 
@@ -188,7 +189,7 @@ describe('EthereumNursery', () => {
       ethereumManager: new MockedEthereumManager(),
       wallets: new Map<string, Wallet>([
         ['BTC', {} as any],
-        ['ETH', new MockedEtherWalletProvider('ETH') as any],
+        [ETHER_SYMBOL, new MockedEtherWalletProvider(ETHER_SYMBOL) as any],
         ['USDT', new MockedErc20WalletProvider('USDT') as any],
       ]),
     } as any,
@@ -210,7 +211,7 @@ describe('EthereumNursery', () => {
       },
       // ...but attempt to find a transaction for this Reverse Swap
       {
-        pair: 'ETH/BTC',
+        pair: 'rBTC/BTC',
         orderSide: OrderSide.BUY,
         transactionId: 'ethSwapTransactionId',
       },
@@ -295,7 +296,7 @@ describe('EthereumNursery', () => {
     let lockupFailed = 0;
 
     mockGetSwapResult = {
-      pair: 'ETH/BTC',
+      pair: 'rBTC/BTC',
       expectedAmount: 10,
       orderSide: OrderSide.SELL,
       timeoutBlockHeight: 11102219,
@@ -703,7 +704,7 @@ describe('EthereumNursery', () => {
     mockGetSwapsExpirableResult = [
       // Expired EtherSwap
       {
-        pair: 'ETH/BTC',
+        pair: 'rBTC/BTC',
         orderSide: OrderSide.SELL,
       },
       // Expired ERC20Swap
@@ -745,7 +746,7 @@ describe('EthereumNursery', () => {
     mockGetReverseSwapsExpirableResult = [
       // Expired EtherSwap
       {
-        pair: 'ETH/BTC',
+        pair: 'rBTC/BTC',
         orderSide: OrderSide.BUY,
       },
       // Expired ERC20Swap
