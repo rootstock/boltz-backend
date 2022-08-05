@@ -8,11 +8,20 @@ export const describe = 'generates a new preimage and its hash';
 
 export const builder = {};
 
-export const handler = (): void => {
+type Result = {
+  preimage:string;
+  preimageHash:string;
+}
+
+export const handler = (): Result => {
   const preimage = randomBytes(32);
 
-  console.log(stringify({
+  const result = {
     preimage: getHexString(preimage),
     preimageHash: getHexString(crypto.sha256(preimage)),
-  }));
+  };
+
+  console.log(stringify(result));
+
+  return result;
 };

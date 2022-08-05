@@ -21,3 +21,10 @@ export const bitcoinLndClient = new LndClient(Logger.disabledLogger, 'BTC', {
   certpath: `${lndDataPath}/certificates/tls.cert`,
   macaroonpath: `${lndDataPath}/macaroons/admin.macaroon`,
 });
+
+export const bitcoinLndClient2 = new LndClient(Logger.disabledLogger, 'BTC', {
+  host,
+  port: 10011,
+  certpath: `${lndDataPath}/certificates/tls.cert`,
+  macaroonpath: `${lndDataPath}/macaroons/admin.macaroon`,
+});

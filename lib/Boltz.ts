@@ -280,6 +280,18 @@ class Boltz {
   private logCouldNotConnect = (service: string, error: any) => {
     this.logger.error(`Could not connect to ${service}: ${formatError(error)}`);
   };
+
+  public stop() {
+    //process.exit(0);
+  }
+
+  public getLogger() { 
+    return this.logger;
+  }
+
+  public getWalletManager():WalletManager {
+    return this.walletManager;
+  }
 }
 
 export default Boltz;
