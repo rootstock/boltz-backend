@@ -20,9 +20,7 @@ export const builder = {
 
 export const handler = async (argv: Arguments<any>): Promise<ContractReceipt> => {
 
-  console.log('connectEthereum...')
   const signer = connectEthereum(argv.provider);
-  console.log('connectEthereum success.')
   const { etherSwap, erc20Swap } = await getContracts(signer);
 
   const preimage = getHexBuffer(argv.preimage);
@@ -39,9 +37,7 @@ export const handler = async (argv: Arguments<any>): Promise<ContractReceipt> =>
       erc20SwapValues.timelock,
     );
   } else {
-    console.log('queryEtherSwapValues...')
     const etherSwapValues = await queryEtherSwapValues(etherSwap, crypto.sha256(preimage));
-    console.log('etherSwap.claim...')
     transaction = await etherSwap.claim(
       preimage,
       etherSwapValues.amount,
@@ -55,7 +51,6 @@ export const handler = async (argv: Arguments<any>): Promise<ContractReceipt> =>
     );
   }
 
-  console.log('transaction.wait...')
   const result : ContractReceipt = await transaction.wait(1);
 
   console.log(`Claimed ${argv.token ? 'ERC20 token' : 'Ether'} in: ${transaction.hash}`);

@@ -8,6 +8,7 @@ ARG VERSION
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install git make gcc libc-dev patch
 
+RUN git config --global http.postBuffer 1048576000
 RUN git clone https://github.com/lightningnetwork/lnd.git $GOPATH/src/github.com/lightningnetwork/lnd
 
 WORKDIR $GOPATH/src/github.com/lightningnetwork/lnd

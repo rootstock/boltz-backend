@@ -4,6 +4,7 @@ import Binance from '../../../../lib/rates/data/exchanges/Binance';
 import Bitfinex from '../../../../lib/rates/data/exchanges/Bitfinex';
 import Poloniex from '../../../../lib/rates/data/exchanges/Poloniex';
 import CoinbasePro from '../../../../lib/rates/data/exchanges/CoinbasePro';
+import MoneyOnChain from '../../../../lib/rates/data/exchanges/MoneyOnChain';
 
 describe('Exchanges', () => {
   test('should get price from Binance', async () => {
@@ -39,5 +40,15 @@ describe('Exchanges', () => {
     const price = await poloniex.getPrice(baseAsset, quoteAsset);
 
     checkPrice(price);
+  });
+
+  test('should get price from MoneyOnChain', async () => {
+    const moneyOnChain = new MoneyOnChain();
+    const price = await moneyOnChain.getPrice('BTC', 'DOC');
+    
+    expect(typeof price).toEqual('number');
+
+    expect(price).toBeGreaterThan(0);
+
   });
 });

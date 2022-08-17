@@ -5,6 +5,7 @@ import Binance from './exchanges/Binance';
 import Bitfinex from './exchanges/Bitfinex';
 import Poloniex from './exchanges/Poloniex';
 import CoinbasePro from './exchanges/CoinbasePro';
+import MoneyOnChain from './exchanges/MoneyOnChain';
 
 class DataAggregator {
   private readonly exchanges: Exchange[] = [
@@ -13,6 +14,7 @@ class DataAggregator {
     new Bitfinex(),
     new Poloniex(),
     new CoinbasePro(),
+    new MoneyOnChain(),
   ];
 
   public readonly pairs = new Set<[string, string]>();
@@ -51,9 +53,16 @@ class DataAggregator {
   };
 
   private getRate = async (baseAsset: string, quoteAsset: string) => {
+
     const promises: Promise<number>[] = [];
 
-    this.exchanges.forEach(exchange => promises.push(exchange.getPrice(baseAsset, quoteAsset)));
+    this.exchanges.forEach(exchange => {
+      try { 
+        promises.push(exchange.getPrice(baseAsset, quoteAsset));
+      } catch (e) {
+        console.log('Error', e);
+      }
+    });
 
     const results = await Promise.all(promises.map(promise => promise.catch(error => error)));
 
