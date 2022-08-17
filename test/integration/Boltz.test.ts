@@ -17,7 +17,7 @@ const provider = 'http://127.0.0.1:4444';
 
 beforeAll(async () => {
     const argv = {
-        configpath: './config.toml'
+        configpath: './test/integration/config.test.toml'
     }
 
     console.log('Starting BOLTZ')
@@ -25,7 +25,7 @@ beforeAll(async () => {
     await boltz.start();
     global.walletManager = boltz.getWalletManager();
     global.boltz = boltz;
-    global.logger = new Logger('verbose');
+    global.logger = new Logger('silly');
 });
 
 test.only('Exchange LN to rBTC', async () => {
@@ -89,7 +89,7 @@ test.only('Exchange LN to rBTC', async () => {
         await sleep(1000);
         await bitcoinLndClient2.disconnect();
     } catch (e:any) {
-        fail('Error in test LN->rBTC ' + e.message);
+        fail(e);
     }
 });
 

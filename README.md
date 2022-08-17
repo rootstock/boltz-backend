@@ -204,6 +204,33 @@ RUN cat /root/.lnd-btc/tls.crt
 - Run the build again, check the logs, it should appear both files.
 - Replace the content, and revert the changes made to `docker/regtest/Dockerfile`.
 
+### Error:
+- After updating dependencies
+
+```
+SocketError: closed
+    at Socket.onSocketClose (./node_modules/undici/lib/client.js:967:31)
+    at Socket.emit (events.js:400:28)
+    at TCP.<anonymous> (net.js:675:12) {
+  code: 'UND_ERR_SOCKET',
+  socket: {
+    localAddress: undefined,
+    localPort: undefined,
+    remoteAddress: undefined,
+    remotePort: undefined,
+    remoteFamily: undefined,
+    timeout: undefined,
+    bytesWritten: 209,
+    bytesRead: 125
+  }
+}
+```
+- https://ethereum.stackexchange.com/questions/130028/hardhat-deploy-script-on-rsk-throws-und-err-socket
+
+#### Fix:
+- Update RSK node to 4.1 ([issue](https://github.com/rsksmart/rskj/issues/1805) and [fix](https://github.com/rsksmart/rskj/pull/1836))
+- Or downgrade hardhat version.
+
 # Original Boltz documentation
 
 [![CI](https://github.com/BoltzExchange/boltz-backend/workflows/CI/badge.svg?branch=master)](https://github.com/BoltzExchange/boltz-backend/actions)
