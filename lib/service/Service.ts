@@ -1025,6 +1025,7 @@ class Service {
     }
 
     if (onchainAmount < 1) {
+      this.logger.error(`Onchain amount too low: onchainAmount=${onchainAmount}, prepayMinerFeeOnchainAmount=${prepayMinerFeeOnchainAmount}, args.invoiceAmount=${args.invoiceAmount}`)
       throw Errors.ONCHAIN_AMOUNT_TOO_LOW();
     }
 

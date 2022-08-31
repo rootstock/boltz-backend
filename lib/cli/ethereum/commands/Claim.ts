@@ -49,6 +49,7 @@ export const handler = async (argv: Arguments<any>): Promise<ContractReceipt> =>
         gasPrice: BigNumber.from(1)
       }
     );
+    console.log(transaction)
   }
 
   const result : ContractReceipt = await transaction.wait(1);
