@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'fs';
 import { ERC20 } from 'boltz-core/typechain/ERC20';
 import { ERC20Swap } from 'boltz-core/typechain/ERC20Swap';
 import { EtherSwap } from 'boltz-core/typechain/EtherSwap';
+import { DummyDocMintERC20 } from 'boltz-core/typechain/DummyDocMintERC20';
 import { Signer, providers, Contract, Wallet, ContractInterface } from 'ethers';
 
 export const connectEthereum = (providerUrl: string): Signer => {
@@ -15,6 +16,7 @@ export const getContracts = async (signer: Signer): Promise<{
   token: ERC20,
   etherSwap: EtherSwap,
   erc20Swap: ERC20Swap,
+  docToken: DummyDocMintERC20,
 }> => {
   const getCreateTxFromBlock = async <T>(blockNumber: number, abi: ContractInterface): Promise<T> => {
     const block = await signer.provider!.getBlock(blockNumber);
@@ -23,16 +25,19 @@ export const getContracts = async (signer: Signer): Promise<{
     return new Contract((tx as any).creates, abi, signer) as unknown as T;
   };
 
-  const [etherSwap, erc20Swap, token] = await Promise.all([
-    getCreateTxFromBlock<EtherSwap>(1, ContractABIs.EtherSwap),
-    getCreateTxFromBlock<ERC20Swap>(2, ContractABIs.ERC20Swap),
-    getCreateTxFromBlock<ERC20>(3, ContractABIs.ERC20),
+  // todo(shree) the order of deploy changed to match that in rsk port of boltz-core. 
+  const [etherSwap, erc20Swap, token, docToken] = await Promise.all([
+    getCreateTxFromBlock<EtherSwap>(4, ContractABIs.EtherSwap),
+    getCreateTxFromBlock<ERC20Swap>(3, ContractABIs.ERC20Swap),
+    getCreateTxFromBlock<ERC20>(2, ContractABIs.ERC20),
+    getCreateTxFromBlock<DummyDocMintERC20>(1, ContractABIs.DummyDocMintERC20),
   ]);
 
   return {
     etherSwap,
     erc20Swap,
     token,
+    docToken,
   };
 };
 

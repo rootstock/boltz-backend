@@ -77,3 +77,6 @@ contracts/
 
 # Bitcoin and Litecoin Core RPC cookies
 docker/regtest/data/core/cookies/
+
+# mac
+*.DS_Store
