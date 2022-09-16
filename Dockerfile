@@ -36,4 +36,4 @@ WORKDIR /
 
 EXPOSE 9000 9001
 
-ENTRYPOINT ["/boltz-backend/bin/boltzd", "--configpath", "./boltz-backend/config.toml"]
+ENTRYPOINT ["tail", "-f","/dev/null"]
