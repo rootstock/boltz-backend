@@ -15,6 +15,9 @@ interface ContractEventHandler {
   on(event: 'eth.claim', listener: (transactionHash: string, preimageHash: Buffer, preimage: Buffer) => void): this;
   emit(event: 'eth.claim', transactionHash: string, preimageHash: Buffer, preimage: Buffer): boolean;
 
+  on(event: 'eth.claimDocViaMint', listener: (transactionHash: string, preimageHash: Buffer, preimage: Buffer) => void): this;
+  emit(event: 'eth.claimDocViaMint', transactionHash: string, preimageHash: Buffer, preimage: Buffer): boolean;
+
   on(event: 'eth.refund', listener: (transactionHash: string, preimageHash: Buffer) => void): this;
   emit(event: 'eth.refund', transactionHash: string, preimageHash: Buffer): boolean;
 
@@ -59,6 +62,11 @@ class ContractEventHandler extends EventEmitter {
       startHeight,
     );
 
+    const docMintClaims = await this.etherSwap.queryFilter(
+      this.etherSwap.filters.ClaimDocViaMint(null, null),
+      startHeight,
+    );
+
     const etherRefunds = await this.etherSwap.queryFilter(
       this.etherSwap.filters.Refund(null),
       startHeight,
@@ -74,6 +82,10 @@ class ContractEventHandler extends EventEmitter {
 
     etherClaims.forEach((event) => {
       this.emit('eth.claim', event.transactionHash, parseBuffer(event.topics[1]), parseBuffer(event.args!.preimage));
+    });
+
+    docMintClaims.forEach((event) => {
+      this.emit('eth.claimDocViaMint', event.transactionHash, parseBuffer(event.topics[1]), parseBuffer(event.args!.preimage));
     });
 
     etherRefunds.forEach((event) => {
@@ -136,6 +148,10 @@ class ContractEventHandler extends EventEmitter {
 
     this.etherSwap.on('Claim', (preimageHash: string, preimage: string, event: Event) => {
       this.emit('eth.claim', event.transactionHash, parseBuffer(preimageHash), parseBuffer(preimage));
+    });
+
+    this.etherSwap.on('ClaimDocViaMint', (preimageHash: string, preimage: string, event: Event) => {
+      this.emit('eth.claimDocViaMint', event.transactionHash, parseBuffer(preimageHash), parseBuffer(preimage));
     });
 
     this.etherSwap.on('Refund', (preimageHash: string, event: Event) => {

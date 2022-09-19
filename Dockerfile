@@ -36,4 +36,7 @@ WORKDIR /
 
 EXPOSE 9000 9001
 
+#ENTRYPOINT ["/boltz-backend/bin/boltzd", "--configpath", "./boltz-backend/config.toml"]
+# todo(shree)  original (above) inconsistent had behavior on M1 macs, with container exiting 
+# (enter command manually after starting). Ivestigate and fix so we can use above entrypoint
 ENTRYPOINT ["tail", "-f","/dev/null"]

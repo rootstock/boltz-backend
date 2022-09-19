@@ -89,6 +89,35 @@ class ContractHandler {
       }
     );
   };
+  
+  // todo(shree) modify method `claimEther() to fit DOC minting case
+  // This will not actually be used since the call will be sent from PoC server, not Boltz
+  // gaslimit will have to be very high, 450K or more.
+  public claimDocViaMint = async (
+    preimage: Buffer,
+    amount: BigNumber,
+    refundAddress: string,
+    timelock: number,
+    btcToMint: BigNumber,
+    docReceiverAddress: string,
+    leftoverRbtcAddr: string,
+  ): Promise<ContractTransaction> => {
+    this.logger.debug(`Claiming Ether with preimage: ${getHexString(preimage)}`);
+    return this.etherSwap.claimDoCViaMint(
+      preimage,
+      amount,
+      refundAddress,
+      timelock,
+      btcToMint,
+      docReceiverAddress,
+      leftoverRbtcAddr,
+      {
+        ...await getGasPrices(this.etherSwap.provider),
+        gasLimit: BigNumber.from(700000), //minting is very expensive (450K+, more with fee estimation)
+      }
+    );
+  };
+
 
   public refundEther = async (
     preimageHash: Buffer,
