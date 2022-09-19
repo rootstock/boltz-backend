@@ -15,6 +15,7 @@ export const getGasPrices = async (provider: providers.Provider): Promise<Overri
     //type: 2,
     //maxFeePerGas: feeData.maxFeePerGas!,
     //maxPriorityFeePerGas: feeData.maxPriorityFeePerGas!,
+    // todo (shree): reminder to Pato. What's this about? 
      gasPrice: feeData.gasPrice?.gt(1) ? feeData.gasPrice : BigNumber.from(2),//,
      gasLimit: "0x222E0",
   };

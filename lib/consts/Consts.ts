@@ -15,5 +15,8 @@ export const gweiDecimals = BigNumber.from(10).pow(BigNumber.from(9));
 
 // This amount will be multiplied with the current gas price to determine
 // how much Ether should be sent to the claim address as prepay miner fee
+// todo(shree) this may need to be much higher for minting, if intended to cover claimViaMint()
+//    Not much downside to doing this automatically, as ultimately its jut RBTC in receipients address.
+//    * but this bit is irreversible, since it is not paid to the contract. Rather to an EOA
 export const ethereumPrepayMinerFeeGasLimit = BigNumber.from(100000);
 

@@ -57,9 +57,9 @@ maxZeroConfAmount = 10_000_000
 [ethereum]
 providerEndpoint = "http://host.docker.internal:4444"
 
-# these addresses are from initial boton deployment
-etherSwapAddress = "0x77045E71a7A2c50903d88e564cD72fab11e82051"
-erc20SwapAddress = "0xDA7Ce79725418F4F6E13Bf5F520C89Cec5f6A974"
+# these addresses are after new order of deployment (own Boltz-core with 4 contracts)
+etherSwapAddress = "0xE0825f57Dd05Ef62FF731c27222A86E104CC4Cad"
+erc20SwapAddress = "0x83C5541A6c8D2dBAD642f385d8d06Ca9B6C731ee"
 
   [[ethereum.tokens]]
   symbol = "rBTC"
@@ -67,12 +67,12 @@ erc20SwapAddress = "0xDA7Ce79725418F4F6E13Bf5F520C89Cec5f6A974"
   maxSwapAmount = 4_294_96700
   minSwapAmount = 1
 
-  # todo(shree) switch this to DOC
+  # todo(shree) currently using testERC20 (not mintable DummyDocMint)
   # for regtest mode, use address of ERC20 token address (boton)
   [[ethereum.tokens]]
   symbol = "DOC"
   decimals = 18
-  contractAddress = "0x83C5541A6c8D2dBAD642f385d8d06Ca9B6C731ee"
+  contractAddress = "0xDA7Ce79725418F4F6E13Bf5F520C89Cec5f6A974"
 
   maxSwapAmount = 4_294_96700000
   minSwapAmount = 10000
