@@ -67,6 +67,7 @@ interface SwapNursery {
   on(event: 'invoice.paid', listener: (swap: Swap) => void): this;
   emit(event: 'invoice.paid', swap: Swap): boolean;
 
+  //todo(shree): replicate for mint DOC (but can skip, since our target is reverse swap)
   on(event: 'claim', listener: (swap: Swap, channelCreation?: ChannelCreation) => void): this;
   emit(event: 'claim', swap: Swap, channelCreation?: ChannelCreation): boolean;
 
@@ -371,6 +372,7 @@ class SwapNursery extends EventEmitter {
       }
 
       case CurrencyType.Ether:
+        //todo(shree): replicate for mint DOC, or skip since this ma not be needed for our use case
         await this.claimEther(
           this.walletManager.ethereumManager!.contractHandler,
           swap,
@@ -457,6 +459,7 @@ class SwapNursery extends EventEmitter {
       });
     });
 
+     //todo(shree): replicate for mint DOC (or skip, not needed for use case?)
     ethereumNursery.on('claim', async (reverseSwap, preimage) => {
       await this.lock.acquire(SwapNursery.reverseSwapLock, async () => {
         await this.settleReverseSwapInvoice(reverseSwap, preimage);
@@ -657,6 +660,7 @@ class SwapNursery extends EventEmitter {
     );
   };
 
+  //todo(shree): replicate for mint DOC (or skip, not needed for use case)
   private claimEther = async (contractHandler: ContractHandler, swap: Swap, etherSwapValues: EtherSwapValues, outgoingChannelId?: string) => {
     const channelCreation = await this.channelCreationRepository.getChannelCreation({
       swapId: swap.id,
@@ -797,7 +801,8 @@ class SwapNursery extends EventEmitter {
 
     return;
   };
-
+  
+  //todo(shree): check relevance for our use case (etherlike reverse swap with DOC mint)
   private settleReverseSwapInvoice = async (reverseSwap: ReverseSwap, preimage: Buffer) => {
     const { base, quote } = splitPairId(reverseSwap.pair);
     const lightningCurrency = getLightningCurrency(base, quote, reverseSwap.orderSide, true);

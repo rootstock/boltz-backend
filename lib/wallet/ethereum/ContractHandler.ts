@@ -102,7 +102,7 @@ class ContractHandler {
     docReceiverAddress: string,
     leftoverRbtcAddr: string,
   ): Promise<ContractTransaction> => {
-    this.logger.debug(`Claiming Ether with preimage: ${getHexString(preimage)}`);
+    this.logger.debug(`Claiming DOC via Mint with preimage: ${getHexString(preimage)}`);
     return this.etherSwap.claimDoCViaMint(
       preimage,
       amount,
