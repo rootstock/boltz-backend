@@ -35,6 +35,9 @@ export const handler = async (argv: Arguments<any>): Promise<ContractReceipt> =>
       erc20SwapValues.tokenAddress,
       erc20SwapValues.refundAddress,
       erc20SwapValues.timelock,
+      {
+        gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
+      }
     );
   } else {
     const etherSwapValues = await queryEtherSwapValues(etherSwap, crypto.sha256(preimage));
@@ -46,8 +49,8 @@ export const handler = async (argv: Arguments<any>): Promise<ContractReceipt> =>
       //TODO fix this workaround with proper gas estimation (there are more in the project, unify this behaviour)
       {
         gasLimit: BigNumber.from(100000),
-        gasPrice: BigNumber.from(1)
-      }
+        gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
+      },
     );
     console.log(transaction)
   }

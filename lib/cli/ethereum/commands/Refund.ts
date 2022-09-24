@@ -1,5 +1,5 @@
 import { Arguments } from 'yargs';
-import { ContractTransaction } from 'ethers';
+import { ContractTransaction, BigNumber } from 'ethers';
 import { getHexBuffer } from '../../../Utils';
 import BuilderComponents from '../../BuilderComponents';
 import { connectEthereum, getContracts } from '../EthereumUtils';
@@ -33,6 +33,9 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
       erc20SwapValues.tokenAddress,
       erc20SwapValues.claimAddress,
       erc20SwapValues.timelock,
+      {
+        gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
+      },
     );
   } else {
     const etherSwapValues = await queryEtherSwapValues(etherSwap, preimageHash);
@@ -41,6 +44,9 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
       etherSwapValues.amount,
       etherSwapValues.claimAddress,
       etherSwapValues.timelock,
+      {
+        gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
+      },
     );
   }
 

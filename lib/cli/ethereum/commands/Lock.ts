@@ -50,6 +50,9 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
       token.address,
       boltzAddress,
       argv.timelock,
+      {
+        gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
+      },
     );
   } else {
     transaction = await etherSwap.lock(
@@ -58,6 +61,7 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
       argv.timelock,
       {
         value: amount,
+        gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
       },
     );
   }

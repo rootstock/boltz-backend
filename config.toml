@@ -39,7 +39,7 @@ minSwapAmount = 1
 maxZeroConfAmount = 10_000_000
 
   [currencies.chain]
-  host = "localhost"
+  host = "host.docker.internal"
   port = 18_445
   cookie = "/boltz-backend/nodes/btc/.bitcoin-cookie"
   rpcuser = "polaruser"

@@ -36,7 +36,7 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
   }
 
   if (argv.token) {
-    const transaction = await token.transfer(destination, amount, {gasPrice: 1});
+    const transaction = await token.transfer(destination, amount, {gasPrice: BigNumber.from(10).pow(7).mul(6)});
     await transaction.wait(1);
 
     transactionHash = transaction.hash;
@@ -44,7 +44,7 @@ export const handler = async (argv: Arguments<any>): Promise<void> => {
     const transaction = await signer.sendTransaction({
       value: amount,
       to: destination,
-      gasPrice: 1,
+      gasPrice: BigNumber.from(10).pow(7).mul(6), //0.06 gwei
     });
     await transaction.wait(1);
 
