@@ -80,3 +80,6 @@ docker/regtest/data/core/cookies/
 
 # mac
 *.DS_Store
+
+# secrets
+.secret

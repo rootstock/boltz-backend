@@ -3,12 +3,12 @@
 // since we are making changes to networks, we can make changes in this file and ...
 //   ... copy it over to node_modules/boltz-core/hardhat.config.ts before deploying contracts 
 
-//import fs from 'fs';
+import fs from 'fs';
 import 'hardhat-gas-reporter';
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-etherscan';
-import { contracts, deploy } from './scripts/deploy';
+import { contracts, deploy } from './contracts/scripts/deploy';
 import { HardhatUserConfig, task } from 'hardhat/config';
 
 /*const paths = {
@@ -17,6 +17,8 @@ import { HardhatUserConfig, task } from 'hardhat/config';
   mnemonics: '.mnemonics.json',
 };*/
 
+//for testnet deployment. ".secret" will have 1 line without quotes, just spaces .. word1 word2 word3 
+const mnemonic = fs.readFileSync(".secret").toString().trim();
 //const mnemonics = fs.existsSync(paths.mnemonics) ? JSON.parse(fs.readFileSync(paths.mnemonics).toString()) : undefined;
 //const infuraKey = fs.existsSync(paths.infuraKey) ? fs.readFileSync(paths.infuraKey).toString().trim() : undefined;
 //const etherscanKey = fs.existsSync(paths.etherscanKey) ? fs.readFileSync(paths.etherscanKey).toString().trim() : undefined;
@@ -50,7 +52,15 @@ const config: HardhatUserConfig = {
         accounts: "remote",
         url: `http://127.0.0.1:4444`,
         chainId: 33,
-       },   
+       },
+    rskTestnet: {
+      chainId: 31,
+      url: 'https://public-node.testnet.rsk.co/',
+      gasMultiplier: 1.1,
+      accounts: {
+        mnemonic: mnemonic,
+      },
+    }   
   };
 //}
 
