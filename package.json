@@ -12,7 +12,7 @@
     "start": "node bin/boltzd --configpath './config.toml'",
     "dev": "npm run compile && npm run start",
     "lint": "eslint --max-warnings 0 --ext .ts .",
-    "docker:build": "docker build . -t boltz/backend:latest -f ./docker/Dockerfile_rsk",
+    "docker:build": "docker build . -t boltz/backend:latest -f ./docker/boltz/Dockerfile_rsk",
     "docker:regtest": "./docker/regtest/startRegtest.sh",
     "docker:regtest:build": "cd docker/ && python3 build.py build lnd --no-cache && python3 build.py build regtest --no-cache && cd ..",
     "docker:rskj:build": "cd ./docker/rsknode && docker build -t rskj:latest .  && cd ../../",
